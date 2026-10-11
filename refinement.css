@@ -1,0 +1,83 @@
+/* Experience-led entry point. Keeps the portfolio content but removes the name-as-hero treatment. */
+@media (pointer:fine){
+  body,body a,body button{cursor:none}
+  .cursor-dot{position:fixed;z-index:100;top:0;left:0;width:28px;height:28px;border-radius:50%;background:#fff;mix-blend-mode:difference;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.78);transition:width .2s,height .2s,border-radius .2s,opacity .18s,transform .18s}
+  .cursor-dot span{display:none;color:#000;font-size:13px;font-weight:700;line-height:1;letter-spacing:-.04em}
+  .cursor-dot.is-visible{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  .cursor-dot.is-link{transform:translate(-50%,-50%) scale(1)}
+  .cursor-dot.is-view{display:grid;width:78px;height:38px;place-items:center;border-radius:999px}
+  .cursor-dot.is-view span{display:block}
+}
+.hero-experience{min-height:100svh;padding:132px 0 32px;background:var(--paper);color:var(--ink);justify-content:space-between}
+.topbar{color:var(--ink)}
+.hero-experience .eyebrow{color:var(--muted)}
+.experience-intro{display:grid;grid-template-columns:1.28fr .72fr;gap:7vw;align-items:end}
+.experience-intro h1{margin:18px 0 0;font-size:clamp(64px,10vw,150px);line-height:.86;letter-spacing:-.09em;white-space:normal}
+.experience-intro h1 span{color:var(--orange)}
+.experience-intro>p{max-width:390px;margin:0 0 14px;font-size:20px;line-height:1.55;letter-spacing:-.045em}
+.experience-list{border-top:1px solid var(--ink)}
+.experience-list a{position:relative;display:grid;grid-template-columns:1.2fr .8fr 1fr 28px;gap:18px;align-items:center;padding:25px 4px;border-bottom:1px solid var(--line);font-size:16px;transition:background .2s,padding .2s}
+.experience-list a span{font-size:21px;font-weight:650;letter-spacing:-.045em}
+.experience-list a time{color:var(--muted);font-size:16px}
+.experience-list a strong{font-size:16px;font-weight:500}
+.experience-list a b{color:var(--orange);font-size:22px;font-weight:500;text-align:right}
+.experience-list a:hover{padding-left:14px;background:#e4e0d9}
+.hero-experience .audience{width:min(1220px,calc(100% - 52px));margin:22px auto 0;color:var(--muted)}
+.hero-experience .audience button{border-color:var(--line);color:var(--muted)}
+.hero-experience .audience button.active{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+
+/* Korean display type needs more air than the original condensed setting. */
+.section-head h2,.about h2,.more-work h2,.contact h2{font-size:clamp(44px,5.8vw,80px);line-height:1.13;letter-spacing:-.072em}
+.case-copy h3{font-size:clamp(34px,3.45vw,53px);line-height:1.18;letter-spacing:-.066em}
+.section-head>p:last-child,.case-summary,.principles p,.work-grid p,.timeline p,.dialog-grid p{line-height:1.68}
+.case-summary{margin-bottom:30px}.section-head h2{margin-bottom:24px}.case-copy h3{margin-bottom:24px}
+.approach .section-head h2{max-width:900px}.contact h2{max-width:950px}.case-dialog h2{line-height:1.24;letter-spacing:-.055em}
+
+/* Section system: each section has one job, and the top works as a table of contents. */
+.portfolio-map{margin-top:auto;border-top:1px solid var(--ink)}
+.portfolio-map>.eyebrow{padding:15px 4px 8px}
+.portfolio-map a{display:grid;grid-template-columns:70px 180px 1fr 28px;gap:18px;align-items:center;padding:18px 4px;border-top:1px solid var(--line);font-size:16px;transition:background .2s,padding .2s}
+.portfolio-map a:last-child{border-bottom:1px solid var(--line)}
+.portfolio-map a span,.portfolio-map a b{color:var(--orange);font-weight:700}
+.portfolio-map a strong{font-size:20px;letter-spacing:-.045em}
+.portfolio-map a em{color:var(--muted);font-size:16px;font-style:normal}
+.portfolio-map a b{text-align:right;font-size:20px}
+.portfolio-map a:hover{padding-left:14px;background:#e4e0d9}
+.activity-head{display:grid;grid-template-columns:1fr 2fr;gap:8vw;align-items:start;margin-top:120px;padding-top:22px;border-top:1px solid var(--ink)}
+.activity-head>p:last-child{max-width:530px;margin:0;font-size:18px;line-height:1.65}
+.activity-grid,.award-grid{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid var(--ink);margin-top:34px}
+.activity-grid article,.award-grid article{min-height:220px;padding:24px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.activity-grid article:nth-child(even),.award-grid article:nth-child(even){border-right:0}
+.activity-grid span,.award-grid span{display:block;color:var(--muted);font-size:14px;font-weight:650}
+.activity-grid h3,.award-grid h3{margin:38px 0 10px;font-size:26px;line-height:1.15;letter-spacing:-.055em}
+.activity-grid p,.award-grid p{margin:0;font-size:16px;line-height:1.65}
+.recognition{display:block;padding:130px 0;border-top:1px solid var(--ink)}
+.recognition .section-head{max-width:850px}
+.award-grid{grid-template-columns:repeat(3,1fr)}
+.award-grid article:nth-child(even){border-right:1px solid var(--line)}
+.award-grid article:nth-child(3n){border-right:0}
+.award-grid article{min-height:205px}
+@media(max-width:700px){
+  .hero-experience{min-height:auto;padding:105px 0 28px}
+  .experience-intro{grid-template-columns:1fr;gap:28px}
+  .experience-intro h1{font-size:clamp(58px,16vw,94px)}
+  .experience-intro>p{font-size:18px}
+  .experience-list a{grid-template-columns:1fr 28px;gap:7px;padding:19px 0}
+  .experience-list a span{font-size:18px}
+  .experience-list a time,.experience-list a strong{grid-column:1;font-size:15px}
+  .experience-list a b{grid-column:2;grid-row:1 / span 3}
+  .hero-experience .audience{width:min(100% - 32px,1220px)}
+  .portfolio-map a{grid-template-columns:40px 1fr 22px;gap:8px;padding:16px 0}
+  .portfolio-map a strong{font-size:18px}
+  .portfolio-map a em{grid-column:2;font-size:15px}
+  .portfolio-map a b{grid-column:3;grid-row:1 / span 2}
+  .activity-head{grid-template-columns:1fr;gap:13px;margin-top:80px}
+  .activity-head>p:last-child{font-size:16px}
+  .activity-grid,.award-grid{grid-template-columns:1fr}
+  .activity-grid article,.activity-grid article:nth-child(even),.award-grid article,.award-grid article:nth-child(even){min-height:0;padding:22px 0;border-right:0}
+  .activity-grid h3,.award-grid h3{margin:25px 0 9px;font-size:23px}
+  .recognition{padding:88px 0}
+  .section-head h2,.about h2,.more-work h2,.contact h2{font-size:clamp(40px,11vw,58px);line-height:1.17;letter-spacing:-.068em}
+  .case-copy h3{font-size:clamp(32px,9.3vw,42px);line-height:1.2}
+}
+@media(prefers-reduced-motion:reduce){.cursor-dot{display:none}.experience-list a{transition:none}}
