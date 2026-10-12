@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flexwork 계약·결제 전체 플로우</title>
+<style>
+  :root{
+    --ink:#0B0B0B;
+    --text:#333333;
+    --muted:#666666;
+    --soft:#999999;
+    --line:#E5E5E5;
+    --line-soft:#F0F0F0;
+    --bg:#F7F7F7;
+    --white:#FFFFFF;
+    --dark:#333333;
+    --green:#50C879;
+    --green-strong:#48B46D;
+    --green-soft:#EEFAF2;
+    --blue:#237CFF;
+    --blue-soft:#EAF2FF;
+    --red:#D64545;
+    --red-soft:#FBEAEA;
+    --gold:#E7B042;
+    --warm:#F0EFED;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",Arial,sans-serif;
+    font-size:14px;
+    line-height:1.5;
+    letter-spacing:0;
+  }
+  button,input,textarea,select{font:inherit;}
+  button{cursor:pointer;}
+  .topbar{
+    height:68px;
+    background:#fff;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 36px;
+    position:sticky;
+    top:0;
+    z-index:40;
+  }
+  .brand{font-size:24px;font-weight:900;color:var(--ink);}
+  .top-actions{display:flex;align-items:center;gap:10px;}
+  .segment{
+    display:flex;
+    align-items:center;
+    gap:3px;
+    padding:3px;
+    border-radius:999px;
+    background:var(--bg);
+  }
+  .segment button{
+    border:0;
+    background:transparent;
+    border-radius:999px;
+    padding:8px 15px;
+    color:var(--muted);
+    font-weight:900;
+  }
+  .segment button.active{background:var(--dark);color:#fff;}
+  .ghost{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:8px;
+    padding:9px 12px;
+    color:var(--text);
+    font-weight:900;
+  }
+  .app{
+    max-width:1440px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:260px minmax(0,1fr);
+    min-height:calc(100vh - 68px);
+  }
+  .sidebar{
+    border-right:1px solid var(--line);
+    background:#fff;
+    padding:24px 18px;
+    position:sticky;
+    top:68px;
+    height:calc(100vh - 68px);
+  }
+  .side-title{
+    color:var(--soft);
+    font-size:12px;
+    font-weight:900;
+    margin:0 0 10px;
+  }
+  .nav{display:flex;flex-direction:column;gap:6px;margin-bottom:24px;}
+  .nav button{
+    border:0;
+    background:transparent;
+    border-radius:8px;
+    padding:11px 12px;
+    text-align:left;
+    color:var(--muted);
+    font-weight:900;
+  }
+  .nav button.active{background:var(--green-soft);color:#20884C;}
+  .mini-card{
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:14px;
+    background:#FCFCFC;
+    margin-bottom:12px;
+  }
+  .mini-card strong{display:block;color:var(--ink);font-size:15px;margin-bottom:4px;}
+  .mini-card span{display:block;color:var(--muted);font-size:12px;font-weight:700;}
+  .content{padding:30px 36px 80px;min-width:0;}
+  .screen{display:none;}
+  .screen.active{display:block;}
+  .page-head{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:24px;
+    margin-bottom:22px;
+  }
+  .kicker{margin:0 0 7px;color:var(--soft);font-size:13px;font-weight:900;}
+  h1{margin:0;color:var(--ink);font-size:30px;line-height:1.35;font-weight:900;}
+  .lead{margin:8px 0 0;color:var(--muted);font-size:15px;font-weight:600;}
+  .btn{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:8px;
+    padding:11px 14px;
+    color:var(--text);
+    font-weight:900;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+  }
+  .btn.primary{border-color:var(--green);background:var(--green);color:var(--ink);}
+  .btn.primary:hover{background:var(--green-strong);}
+  .btn.dark{border-color:var(--dark);background:var(--dark);color:#fff;}
+  .btn.danger{border-color:var(--red-soft);background:var(--red-soft);color:var(--red);}
+  .btn.full{width:100%;}
+  .btn.disabled{background:#EDEDED;border-color:#EDEDED;color:#fff;cursor:not-allowed;}
+  .flowbar{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:8px;
+    margin-bottom:18px;
+  }
+  .flow-step{
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+    padding:11px;
+    color:var(--soft);
+    font-size:12px;
+    font-weight:900;
+  }
+  .flow-step.active{border-color:var(--green);background:var(--green-soft);color:#20884C;}
+  .grid{display:grid;gap:16px;}
+  .grid.two{grid-template-columns:1fr 360px;align-items:start;}
+  .grid.three{grid-template-columns:repeat(3,1fr);}
+  .grid.four{grid-template-columns:repeat(4,1fr);}
+  .panel{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:22px;
+  }
+  .panel h2{margin:0 0 16px;color:var(--ink);font-size:20px;font-weight:900;}
+  .panel p{margin:0;color:var(--muted);font-weight:600;}
+  .section-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px;}
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    height:26px;
+    border-radius:999px;
+    padding:0 9px;
+    background:#F0F0F0;
+    color:var(--soft);
+    font-size:12px;
+    font-weight:900;
+    white-space:nowrap;
+  }
+  .badge.green{background:var(--green-soft);color:#20884C;}
+  .badge.blue{background:var(--blue-soft);color:var(--blue);}
+  .badge.red{background:var(--red-soft);color:var(--red);}
+  .person-card{
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+    padding:18px;
+    display:grid;
+    grid-template-columns:58px minmax(0,1fr);
+    gap:14px;
+    position:relative;
+  }
+  .person-card.selected{border-color:var(--green);box-shadow:0 0 0 2px var(--green-soft) inset;}
+  .avatar{
+    width:58px;height:58px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--dark);color:#fff;font-weight:900;font-size:18px;
+  }
+  .person-card h3,.job-card h3{margin:0 0 6px;color:var(--ink);font-size:17px;font-weight:900;}
+  .person-card p,.job-card p{margin:0;color:var(--muted);font-size:13px;font-weight:600;}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;}
+  .tag{
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:#fff;
+    color:var(--muted);
+    padding:4px 7px;
+    font-size:12px;
+    font-weight:800;
+  }
+  .meta-list{display:grid;gap:10px;}
+  .meta{
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    border-bottom:1px solid var(--line-soft);
+    padding:10px 0;
+    color:var(--muted);
+    font-weight:800;
+  }
+  .meta:last-child{border-bottom:0;}
+  .meta strong{color:var(--ink);}
+  .summary{
+    position:sticky;
+    top:92px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+  }
+  .summary-head{padding:20px;border-bottom:1px solid var(--line-soft);}
+  .summary-head h2{margin:0 0 6px;color:var(--ink);font-size:20px;font-weight:900;}
+  .summary-head p{margin:0;color:var(--soft);font-size:13px;font-weight:700;}
+  .summary-body{padding:20px;}
+  .total{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    border-top:1px solid var(--line-soft);
+    margin-top:14px;
+    padding-top:16px;
+    color:var(--ink);
+    font-size:17px;
+    font-weight:900;
+  }
+  .total strong{font-size:26px;}
+  .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+  label.field{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:13px;font-weight:800;}
+  .field input,.field select,.field textarea{
+    width:100%;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+    padding:11px 12px;
+    color:var(--text);
+  }
+  .field textarea{min-height:92px;resize:vertical;}
+  .job-card,.option-card{
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:18px;
+    background:#fff;
+  }
+  .option-card.selected{border-color:var(--green);box-shadow:0 0 0 2px var(--green-soft) inset;}
+  .price{color:var(--ink);font-size:24px;font-weight:900;margin-top:14px;}
+  .sub{color:var(--soft);font-size:12px;font-weight:700;}
+  .timeline{display:grid;gap:10px;}
+  .timeline-item{
+    display:grid;
+    grid-template-columns:110px minmax(0,1fr) 120px;
+    gap:12px;
+    align-items:center;
+    border:1px solid var(--line-soft);
+    border-radius:8px;
+    padding:14px;
+  }
+  .progress{
+    height:10px;
+    border-radius:999px;
+    background:#F0F0F0;
+    overflow:hidden;
+  }
+  .progress span{display:block;height:100%;background:var(--green);}
+  .issue-card{
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:16px;
+    background:#fff;
+  }
+  .issue-card.open{border-color:var(--red-soft);background:#FFFCFC;}
+  .chat{
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+    background:#fff;
+  }
+  .chat-log{padding:16px;display:grid;gap:10px;min-height:220px;background:#FCFCFC;}
+  .bubble{max-width:76%;border-radius:12px;padding:10px 12px;background:#fff;border:1px solid var(--line);color:var(--text);font-weight:600;}
+  .bubble.me{margin-left:auto;background:var(--green-soft);border-color:#D9F4E2;}
+  .chat-input{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);}
+  .chat-input input{flex:1;border:1px solid var(--line);border-radius:8px;padding:10px;}
+  table{width:100%;border-collapse:collapse;}
+  th,td{border-bottom:1px solid var(--line-soft);padding:13px 10px;text-align:left;vertical-align:middle;}
+  th{color:var(--soft);font-size:12px;font-weight:900;}
+  td{color:var(--text);font-weight:700;}
+  .toggle-note{
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#FCFCFC;
+    padding:14px;
+    color:var(--muted);
+    font-weight:700;
+  }
+  .toast{
+    position:fixed;
+    left:50%;
+    bottom:24px;
+    transform:translateX(-50%) translateY(16px);
+    opacity:0;
+    background:var(--dark);
+    color:#fff;
+    border-radius:999px;
+    padding:12px 18px;
+    font-weight:800;
+    transition:opacity .15s,transform .15s;
+    z-index:80;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  @media (max-width:1100px){
+    .app{grid-template-columns:1fr;}
+    .sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);}
+    .grid.two{grid-template-columns:1fr;}
+    .summary{position:static;}
+    .grid.three,.grid.four,.flowbar{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:720px){
+    .topbar{height:auto;padding:16px;align-items:flex-start;flex-direction:column;}
+    .top-actions{width:100%;justify-content:space-between;}
+    .content{padding:22px 16px 60px;}
+    .page-head{align-items:flex-start;flex-direction:column;}
+    h1{font-size:25px;}
+    .grid.three,.grid.four,.flowbar,.form-grid{grid-template-columns:1fr;}
+    .timeline-item{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">FLEXWORK</div>
+  <div class="top-actions">
+    <div class="segment" aria-label="플로우 유형">
+      <button class="active" type="button" data-mode="company">기업</button>
+      <button type="button" data-mode="personal">전문가</button>
+    </div>
+    <button class="ghost" type="button">베러웍스 팀 ▾</button>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <p class="side-title">기업 계약 플로우</p>
+    <nav class="nav company-nav">
+      <button class="active" data-screen="company-discover" type="button">1. 사람 선택</button>
+      <button data-screen="company-contract" type="button">2. 계약 조건</button>
+      <button data-screen="company-payment" type="button">3. 결제</button>
+      <button data-screen="company-manage" type="button">4. 후속 관리</button>
+      <button data-screen="company-issue" type="button">5. 이슈 조정</button>
+      <button data-screen="company-ledger" type="button">6. 정산/내역</button>
+    </nav>
+    <p class="side-title">전문가 정산 플로우</p>
+    <nav class="nav personal-nav">
+      <button data-screen="personal-offer" type="button">1. 기업 선택</button>
+      <button data-screen="personal-contract" type="button">2. 계약 조건</button>
+      <button data-screen="personal-payout" type="button">3. 정산 정보</button>
+      <button data-screen="personal-work" type="button">4. 업무 관리</button>
+      <button data-screen="personal-issue" type="button">5. 이슈 조정</button>
+      <button data-screen="personal-ledger" type="button">6. 정산 내역</button>
+    </nav>
+    <div class="mini-card">
+      <strong>정책 상태</strong>
+      <span>카드 등록, 자동결제, 환불, 수수료, 정산 수수료는 확인 필요로 표시</span>
+    </div>
+    <div class="mini-card">
+      <strong>실제 결제 없음</strong>
+      <span>모든 결제 버튼은 프로토타입 알림만 표시</span>
+    </div>
+  </aside>
+
+  <main class="content">
+    <section id="company-discover" class="screen active">
+      <div class="page-head">
+        <div><p class="kicker">기업 / 사람 선택</p><h1>계약하고 싶은 사람 선택</h1><p class="lead">후보를 비교하고 한 명을 선택해 계약 조건 설정으로 이동합니다.</p></div>
+        <button class="btn primary" data-screen="company-contract" type="button">선택 후 계약 진행</button>
+      </div>
+      <div class="flowbar">
+        <div class="flow-step active">사람 선택</div><div class="flow-step">계약 조건</div><div class="flow-step">결제</div><div class="flow-step">운영 관리</div><div class="flow-step">이슈 조정</div><div class="flow-step">정산</div>
+      </div>
+      <div class="grid two">
+        <div class="grid">
+          <div class="person-card selected">
+            <div class="avatar">HJ</div>
+            <div>
+              <div class="section-row"><h3>전문가 C</h3><span class="badge green">추천</span></div>
+              <p>마케팅 콘텐츠 운영 · 주 10시간 가능 · 최근 응답 12분</p>
+              <div class="tags"><span class="tag">콘텐츠 기획</span><span class="tag">광고 소재</span><span class="tag">리포트</span><span class="tag">4.9점</span></div>
+            </div>
+          </div>
+          <div class="person-card">
+            <div class="avatar">TE</div>
+            <div>
+              <div class="section-row"><h3>전문가 A</h3><span class="badge">검토중</span></div>
+              <p>브랜드 디자인 운영 · 주 6시간 가능 · 포트폴리오 18개</p>
+              <div class="tags"><span class="tag">브랜딩</span><span class="tag">상세페이지</span><span class="tag">Figma</span></div>
+            </div>
+          </div>
+          <div class="person-card">
+            <div class="avatar">MK</div>
+            <div>
+              <div class="section-row"><h3>전문가 B</h3><span class="badge">면접 가능</span></div>
+              <p>퍼포먼스 마케팅 · 주 15시간 가능 · B2B SaaS 경험</p>
+              <div class="tags"><span class="tag">Meta Ads</span><span class="tag">GA4</span><span class="tag">CRM</span></div>
+            </div>
+          </div>
+        </div>
+        <aside class="summary">
+          <div class="summary-head"><h2>선택 요약</h2><p>현재 선택된 후보 기준</p></div>
+          <div class="summary-body">
+            <div class="meta-list">
+              <div class="meta"><span>후보</span><strong>전문가 C</strong></div>
+              <div class="meta"><span>예상 계약</span><strong>4주 / 주 10시간</strong></div>
+              <div class="meta"><span>예상 크레딧</span><strong>80C</strong></div>
+              <div class="meta"><span>시작 가능일</span><strong>2026. 7. 15</strong></div>
+            </div>
+            <button class="btn primary full" data-screen="company-contract" type="button">계약 조건 설정</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="company-contract" class="screen">
+      <div class="page-head">
+        <div><p class="kicker">기업 / 계약 조건</p><h1>계약 범위와 차감 조건 설정</h1><p class="lead">업무 범위, 기간, 검수 방식, 크레딧 차감 방식을 확인합니다.</p></div>
+        <button class="btn primary" data-screen="company-payment" type="button">결제 단계로 이동</button>
+      </div>
+      <div class="flowbar">
+        <div class="flow-step active">사람 선택</div><div class="flow-step active">계약 조건</div><div class="flow-step">결제</div><div class="flow-step">운영 관리</div><div class="flow-step">이슈 조정</div><div class="flow-step">정산</div>
+      </div>
+      <div class="grid two">
+        <div class="grid">
+          <div class="panel">
+            <h2>계약서 초안</h2>
+            <div class="form-grid">
+              <label class="field">계약명<input value="마케팅 콘텐츠 운영 파트타임"></label>
+              <label class="field">계약 기간<select><option>4주</option><option>8주</option></select></label>
+              <label class="field">시작일<input value="2026. 7. 15"></label>
+              <label class="field">주간 예상 시간<input value="10시간"></label>
+              <label class="field" style="grid-column:1/-1">업무 범위<textarea>콘텐츠 캘린더 정리, 광고 소재 초안, 주간 성과 리포트 작성</textarea></label>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>검수와 조정 기준</h2>
+            <div class="grid three">
+              <div class="option-card selected"><span class="badge green">기본</span><h3>주간 검수</h3><p>매주 산출물 확인 후 다음 주 크레딧 차감</p></div>
+              <div class="option-card"><span class="badge">마일스톤</span><h3>단계별 검수</h3><p>마일스톤 완료 기준으로 차감</p></div>
+              <div class="option-card"><span class="badge red">확인 필요</span><h3>자동 연장</h3><p>정책 미확정. 확정 전까지 비활성 상태</p></div>
+            </div>
+          </div>
+        </div>
+        <aside class="summary">
+          <div class="summary-head"><h2>계약 조건 요약</h2><p>결제 전 확인</p></div>
+          <div class="summary-body">
+            <div class="meta-list">
+              <div class="meta"><span>계약 대상</span><strong>전문가 C</strong></div>
+              <div class="meta"><span>차감 방식</span><strong>주간 검수 후 차감</strong></div>
+              <div class="meta"><span>예상 차감</span><strong>주 20C</strong></div>
+              <div class="meta"><span>환불/수수료</span><strong>확인 필요</strong></div>
+            </div>
+            <button class="btn primary full" data-screen="company-payment" type="button">크레딧 결제</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="company-payment" class="screen">
+      <div class="page-head">
+        <div><p class="kicker">기업 / 결제</p><h1>계약 시작을 위한 크레딧 결제</h1><p class="lead">결제 수단은 실제 연동하지 않고, 정책 미확정 항목은 확인 필요로 표시합니다.</p></div>
+        <button class="btn primary" data-screen="company-manage" type="button">결제 완료 상태로 보기</button>
+      </div>
+      <div class="flowbar">
+        <div class="flow-step active">사람 선택</div><div class="flow-step active">계약 조건</div><div class="flow-step active">결제</div><div class="flow-step">운영 관리</div><div class="flow-step">이슈 조정</div><div class="flow-step">정산</div>
+      </div>
+      <div class="grid two">
+        <div class="grid">
+          <div class="panel">
+            <div class="section-row"><h2>크레딧 패키지</h2><span class="badge green">추천 80C</span></div>
+            <div class="grid three">
+              <div class="option-card"><h3>30C</h3><p>단기 테스트 계약</p><div class="price">330,000원</div><span class="sub">VAT 포함</span></div>
+              <div class="option-card selected"><h3>80C</h3><p>이번 계약 예상 사용량</p><div class="price">880,000원</div><span class="sub">VAT 포함</span></div>
+              <div class="option-card"><h3>120C</h3><p>여러 계약 동시 운영</p><div class="price">1,320,000원</div><span class="sub">VAT 포함</span></div>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>결제 수단</h2>
+            <div class="grid three">
+              <div class="option-card selected"><h3>일반 결제</h3><p>프로토타입 알림만 표시</p></div>
+              <div class="option-card"><h3>카드 등록</h3><p>확인 필요</p></div>
+              <div class="option-card"><h3>자동결제</h3><p>확인 필요</p></div>
+            </div>
+          </div>
+        </div>
+        <aside class="summary">
+          <div class="summary-head"><h2>주문 요약</h2><p>기업 계약 결제</p></div>
+          <div class="summary-body">
+            <div class="meta-list">
+              <div class="meta"><span>계약</span><strong>마케팅 콘텐츠 운영</strong></div>
+              <div class="meta"><span>선택 크레딧</span><strong>80C</strong></div>
+              <div class="meta"><span>결제 금액</span><strong>880,000원</strong></div>
+              <div class="meta"><span>자동결제</span><strong>확인 필요</strong></div>
+            </div>
+            <div class="total"><span>총 결제</span><strong>880,000원</strong></div>
+            <button class="btn primary full" data-toast="프로토타입입니다. 실제 결제는 진행되지 않습니다." data-screen="company-manage" type="button">결제하고 계약 시작</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="company-manage" class="screen">
+      <div class="page-head">
+        <div><p class="kicker">기업 / 후속 관리</p><h1>계약 운영과 지속 차감 관리</h1><p class="lead">진행 상황, 예정 차감, 검수, 연장/중단 요청을 한 화면에서 확인합니다.</p></div>
+        <button class="btn danger" data-screen="company-issue" type="button">문제 조정 요청</button>
+      </div>
+      <div class="flowbar">
+        <div class="flow-step active">사람 선택</div><div class="flow-step active">계약 조건</div><div class="flow-step active">결제</div><div class="flow-step active">운영 관리</div><div class="flow-step">이슈 조정</div><div class="flow-step">정산</div>
+      </div>
+      <div class="grid two">
+        <div class="grid">
+          <div class="panel">
+            <div class="section-row"><h2>진행 중 계약</h2><span class="badge green">활성</span></div>
+            <div class="meta-list">
+              <div class="meta"><span>남은 크레딧</span><strong>60C</strong></div>
+              <div class="meta"><span>다음 차감 예정</span><strong>2026. 7. 22 / 20C</strong></div>
+              <div class="meta"><span>자동 연장</span><strong>확인 필요</strong></div>
+              <div class="meta"><span>이번 주 검수</span><strong>대기중</strong></div>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>주간 운영 타임라인</h2>
+            <div class="timeline">
+              <div class="timeline-item"><strong>1주차</strong><div><div class="progress"><span style="width:100%"></span></div><p>콘텐츠 캘린더 제출 완료</p></div><span class="badge green">차감 -20C</span></div>
+              <div class="timeline-item"><strong>2주차</strong><div><div class="progress"><span style="width:72%"></span></div><p>광고 소재 초안 진행 중</p></div><span class="badge blue">검수 대기</span></div>
+              <div class="timeline-item"><strong>3주차</strong><div><div class="progress"><span style="width:0%"></span></div><p>리포트 작성 예정</p></div><span class="badge">예정</span></div>
+            </div>
+          </div>
+        </div>
+        <aside class="summary">
+          <div class="summary-head"><h2>운영 액션</h2><p>계약 도중 가능한 관리</p></div>
+          <div class="summary-body">
+            <div class="grid">
+              <button class="btn full" data-toast="검수 승인 프로토타입입니다." type="button">이번 주 검수 승인</button>
+              <button class="btn full" data-toast="연장 요청 정책은 확인 필요입니다." type="button">계약 연장 요청</button>
+              <button class="btn danger full" data-screen="company-issue" type="button">문제 조정 요청</button>
+              <button class="btn full" data-screen="company-ledger" type="button">정산/내역 보기</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="company-issue" class="screen">
+      <div class="page-head">
+        <div><p class="kicker">기업 / 이슈 조정</p><h1>문제 발생 시 조정 플로우</h1><p class="lead">작업 지연, 품질 이슈, 차감 이견이 생기면 조정 요청과 임시 보류 상태를 관리합니다.</p></div>
+        <button class="btn primary" data-screen="company-ledger" type="button">조정 후 정산 보기</button>
+      </div>
+      <div class="flowbar">
+        <div class="flow-step active">사람 선택</div><div class="flow-step active">계약 조건</div><div class="flow-step active">결제</div><div class="flow-step active">운영 관리</div><div class="flow-step active">이슈 조정</div><div class="flow-step">정산</div>
+      </div>
+      <div class="grid two">
+        <div class="grid">
+          <div class="issue-card open">
+            <div class="section-row"><h2>오픈 이슈</h2><span class="badge red">차감 보류</span></div>
+            <p>2주차 산출물 범위가 계약 조건과 다르다는 요청이 접수되어, 다음 차감 20C가 보류 상태입니다.</p>
+            <div class="tags"><span class="tag">작업 범위</span><span class="tag">차감 보류</span><span class="tag">관리자 검토</span></div>
+          </div>
+          <div class="chat">
+            <div class="chat-log">
+              <div class="bubble">이번 주 산출물 범위가 초안보다 줄어든 것 같습니다. 차감을 보류하고 싶습니다.</div>
+              <div class="bubble me">확인했습니다. 계약 범위와 산출물을 비교해 조정 요청으로 등록합니다.</div>
+              <div class="bubble">관리자 검토 후 차감 재개 또는 부분 차감으로 처리됩니다.</div>
+            </div>
+            <div class="chat-input"><input placeholder="조정 메시지를 입력하세요"><button class="btn" data-toast="메시지 전송 프로토타입입니다." type="button">전송</button></div>
+          </div>
+        </div>
+        <aside class="summary">
+          <div class="summary-head"><h2>조정 옵션</h2><p>정책 확정 전 상태</p></div>
+          <div class="summary-body">
+            <div class="grid">
+              <button class="btn full" data-toast="부분 차감은 확인 필요입니다." type="button">부분 차감 제안</button>
+              <button class="btn full" data-toast="기간 연장은 확인 필요입니다." type="button">기간 연장 요청</button>
+              <button class="btn danger full" data-toast="환불 정책은 확인 필요입니다." type="button">환불/취소 요청</button>
+              <button class="btn primary full" data-screen="company-ledger" type="button">조정 완료 처리</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="company-ledger" class="screen">
+      <div class="page-head">
+        <div><p class="kicker">기업 / 정산과 내역</p><h1>크레딧 차감과 결제 내역</h1><p class="lead">지속적으로 돈이 나가는 흐름을 거래 내역, 예정 차감, 보류 상태로 확인합니다.</p></div>
+        <button class="btn" data-screen="company-discover" type="button">새 계약 시작</button>
+      </div>
+      <div class="flowbar">
+        <div class="flow-step active">사람 선택</div><div class="flow-step active">계약 조건</div><div class="flow-step active">결제</div><div class="flow-step active">운영 관리</div><div class="flow-step active">이슈 조정</div><div class="flow-step active">정산</div>
+      </div>
+      <div class="grid">
+        <div class="grid four">
+          <div class="panel"><h2>잔여 크레딧</h2><div class="price">60C</div><span class="sub">유료 60C / 무료 0C</span></div>
+          <div class="panel"><h2>이번 달 차감</h2><div class="price">20C</div><span class="sub">1건 완료</span></div>
+          <div class="panel"><h2>보류 크레딧</h2><div class="price">20C</div><span class="sub">이슈 조정 중</span></div>
+          <div class="panel"><h2>다음 예정</h2><div class="price">7.22</div><span class="sub">20C 차감 예정</span></div>
+        </div>
+        <div class="panel">
+          <h2>거래 내역</h2>
+          <table>
+            <thead><tr><th>일시</th><th>항목</th><th>상태</th><th>크레딧</th><th>금액</th><th>메모</th></tr></thead>
+            <tbody>
+              <tr><td>2026. 7. 15</td><td>80C 충전</td><td><span class="badge green">지급</span></td><td>+80C</td><td>880,000원</td><td>결제 완료 상태 프로토타입</td></tr>
+              <tr><td>2026. 7. 16</td><td>1주차 검수 완료</td><td><span class="badge blue">차감</span></td><td>-20C</td><td>-</td><td>주간 검수 승인</td></tr>
+              <tr><td>2026. 7. 22</td><td>2주차 예정 차감</td><td><span class="badge red">보류</span></td><td>-20C</td><td>-</td><td>이슈 조정 중</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="personal-offer" class="screen">
+      <div class="page-head">
+        <div><p class="kicker">전문가 / 기업 선택</p><h1>제안받은 기업 계약 선택</h1><p class="lead">전문가는 기업이 보낸 제안 중 진행할 계약을 선택합니다. 기업 플로우의 ‘사람 선택’에 대응됩니다.</p></div>
+        <button class="btn primary" data-screen="personal-contract" type="button">제안 확인 후 진행</button>
+      </div>
+      <div class="flowbar">
+        <div class="flow-step active">기업 선택</div><div class="flow-step">계약 조건</div><div class="flow-step">정산 정보</div><div class="flow-step">업무 관리</div><div class="flow-step">이슈 조정</div><div class="flow-step">정산 내역</div>
+      </div>
+      <div class="grid two">
+        <div class="grid">
+          <div class="person-card selected">
+            <div class="avatar">BW</div>
+            <div>
+              <div class="section-row"><h3>베러웍스 팀</h3><span class="badge green">추천 제안</span></div>
+              <p>마케팅 콘텐츠 운영 · 4주 계약 · 주 10시간 · 예상 정산 800,000원</p>
+              <div class="tags"><span class="tag">콘텐츠 기획</span><span class="tag">주간 검수</span><span class="tag">크레딧 기반 정산</span></div>
+            </div>
+          </div>
+          <div class="person-card">
+            <div class="avatar">SO</div>
+            <div>
+              <div class="section-row"><h3>소프트런 팀</h3><span class="badge">검토 가능</span></div>
+              <p>브랜드 상세페이지 운영 · 2주 계약 · 예상 정산 420,000원</p>
+              <div class="tags"><span class="tag">디자인</span><span class="tag">단기</span><span class="tag">마일스톤</span></div>
+            </div>
+          </div>
+          <div class="person-card">
+            <div class="avatar">MG</div>
+            <div>
+              <div class="section-row"><h3>마그넷랩</h3><span class="badge">면담 요청</span></div>
+              <p>퍼포먼스 리포트 자동화 · 6주 계약 · 예상 정산 확인 필요</p>
+              <div class="tags"><span class="tag">리포트</span><span class="tag">GA4</span><span class="tag">정산 조건 확인</span></div>
+            </div>
+          </div>
+        </div>
+        <aside class="summary">
+          <div class="summary-head"><h2>선택 제안 요약</h2><p>전문가 관점</p></div>
+          <div class="summary-body">
+            <div class="meta-list">
+              <div class="meta"><span>기업</span><strong>베러웍스 팀</strong></div>
+              <div class="meta"><span>계약 기간</span><strong>4주</strong></div>
+              <div class="meta"><span>예상 지급</span><strong>800,000원</strong></div>
+              <div class="meta"><span>정산 수수료</span><strong>확인 필요</strong></div>
+            </div>
+            <button class="btn primary full" data-screen="personal-contract" type="button">계약 조건 확인</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="personal-contract" class="screen">
+      <div class="page-head">
+        <div><p class="kicker">전문가 / 계약 조건</p><h1>업무 범위와 지급 조건 확인</h1><p class="lead">기업이 설정한 계약 조건을 전문가가 확인하고 수락합니다. 기업 플로우의 ‘계약 조건’에 대응됩니다.</p></div>
+        <button class="btn primary" data-screen="personal-payout" type="button">정산 정보 입력</button>
+      </div>
+      <div class="flowbar">
+        <div class="flow-step active">기업 선택</div><div class="flow-step active">계약 조건</div><div class="flow-step">정산 정보</div><div class="flow-step">업무 관리</div><div class="flow-step">이슈 조정</div><div class="flow-step">정산 내역</div>
+      </div>
+      <div class="grid two">
+        <div class="grid">
+          <div class="panel">
+            <h2>기업 제안 계약서</h2>
+            <div class="form-grid">
+              <label class="field">계약명<input value="마케팅 콘텐츠 운영 파트타임"></label>
+              <label class="field">계약 기간<input value="4주"></label>
+              <label class="field">시작일<input value="2026. 7. 15"></label>
+              <label class="field">주간 작업 시간<input value="10시간"></label>
+              <label class="field" style="grid-column:1/-1">전문가 확인 메모<textarea>업무 범위와 주간 검수 기준을 확인했습니다. 2주차 이후 리포트 템플릿은 기업과 협의가 필요합니다.</textarea></label>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>지급 기준</h2>
+            <div class="grid three">
+              <div class="option-card selected"><span class="badge green">기본</span><h3>주간 검수 후 지급</h3><p>기업 승인 후 정산 가능 금액으로 반영</p></div>
+              <div class="option-card"><span class="badge">보류 가능</span><h3>이슈 발생 시 지급 보류</h3><p>조정 완료 전까지 지급 대기</p></div>
+              <div class="option-card"><span class="badge red">확인 필요</span><h3>수수료/원천징수</h3><p>정책 확정 후 상세 표시</p></div>
+            </div>
+          </div>
+        </div>
+        <aside class="summary">
+          <div class="summary-head"><h2>수락 전 요약</h2><p>전문가 지급 관점</p></div>
+          <div class="summary-body">
+            <div class="meta-list">
+              <div class="meta"><span>기업</span><strong>베러웍스 팀</strong></div>
+              <div class="meta"><span>예상 지급</span><strong>주 200,000원</strong></div>
+              <div class="meta"><span>지급 방식</span><strong>검수 후 지급</strong></div>
+              <div class="meta"><span>세금/수수료</span><strong>확인 필요</strong></div>
+            </div>
+            <button class="btn primary full" data-screen="personal-payout" type="button">계약 수락</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="personal-payout" class="screen">
+      <div class="page-head">
+        <div><p class="kicker">전문가 / 정산 정보</p><h1>정산받을 정보 확인</h1><p class="lead">기업이 결제한 금액에서 검수 완료분을 전문가에게 지급하는 단계입니다. 기업 플로우의 ‘결제’에 대응됩니다.</p></div>
+        <button class="btn primary" data-screen="personal-work" type="button">업무 시작 상태로 보기</button>
+      </div>
+      <div class="flowbar">
+        <div class="flow-step active">기업 선택</div><div class="flow-step active">계약 조건</div><div class="flow-step active">정산 정보</div><div class="flow-step">업무 관리</div><div class="flow-step">이슈 조정</div><div class="flow-step">정산 내역</div>
+      </div>
+      <div class="grid two">
+        <div class="grid">
+          <div class="panel">
+            <h2>정산 계좌</h2>
+            <div class="form-grid">
+              <label class="field">예금주<input value="전문가 C"></label>
+              <label class="field">은행<select><option>국민은행</option><option>신한은행</option><option>카카오뱅크</option></select></label>
+              <label class="field" style="grid-column:1/-1">계좌번호<input value="123456-00-000000"></label>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>정산 정책 상태</h2>
+            <div class="grid three">
+              <div class="option-card selected"><h3>검수 완료분 지급</h3><p>기업 승인 후 정산 가능 금액으로 이동</p></div>
+              <div class="option-card"><h3>정산 주기</h3><p>확인 필요</p></div>
+              <div class="option-card"><h3>세금/수수료</h3><p>확인 필요</p></div>
+            </div>
+          </div>
+        </div>
+        <aside class="summary">
+          <div class="summary-head"><h2>정산 예정 요약</h2><p>기업 결제와 대응</p></div>
+          <div class="summary-body">
+            <div class="meta-list">
+              <div class="meta"><span>기업 결제</span><strong>880,000원</strong></div>
+              <div class="meta"><span>전문가 예상 지급</span><strong>800,000원</strong></div>
+              <div class="meta"><span>플랫폼 수수료</span><strong>확인 필요</strong></div>
+              <div class="meta"><span>첫 지급 예정</span><strong>1주차 검수 후</strong></div>
+            </div>
+            <div class="total"><span>정산 가능 예정</span><strong>0원</strong></div>
+            <button class="btn primary full" data-toast="정산 정보 저장 프로토타입입니다." data-screen="personal-work" type="button">정산 정보 저장</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="personal-work" class="screen">
+      <div class="page-head">
+        <div><p class="kicker">전문가 / 업무 관리</p><h1>업무 진행과 지급 예정 관리</h1><p class="lead">전문가는 산출물 제출, 기업 검수, 지급 예정 금액을 확인합니다. 기업 플로우의 ‘후속 관리’에 대응됩니다.</p></div>
+        <button class="btn danger" data-screen="personal-issue" type="button">조정 요청</button>
+      </div>
+      <div class="flowbar">
+        <div class="flow-step active">기업 선택</div><div class="flow-step active">계약 조건</div><div class="flow-step active">정산 정보</div><div class="flow-step active">업무 관리</div><div class="flow-step">이슈 조정</div><div class="flow-step">정산 내역</div>
+      </div>
+      <div class="grid two">
+        <div class="grid">
+          <div class="grid four">
+            <div class="panel"><h2>정산 가능</h2><div class="price">200,000원</div><span class="sub">1주차 검수 완료</span></div>
+            <div class="panel"><h2>지급 대기</h2><div class="price">200,000원</div><span class="sub">2주차 검수 대기</span></div>
+            <div class="panel"><h2>보류 금액</h2><div class="price">0원</div><span class="sub">현재 이슈 없음</span></div>
+            <div class="panel"><h2>남은 계약</h2><div class="price">2주</div><span class="sub">3-4주차 예정</span></div>
+          </div>
+          <div class="panel">
+            <h2>산출물 제출 타임라인</h2>
+            <div class="timeline">
+              <div class="timeline-item"><strong>1주차</strong><div><div class="progress"><span style="width:100%"></span></div><p>콘텐츠 캘린더 제출 및 승인 완료</p></div><span class="badge green">지급 가능</span></div>
+              <div class="timeline-item"><strong>2주차</strong><div><div class="progress"><span style="width:72%"></span></div><p>광고 소재 초안 제출, 기업 검수 대기</p></div><span class="badge blue">검수 대기</span></div>
+              <div class="timeline-item"><strong>3주차</strong><div><div class="progress"><span style="width:0%"></span></div><p>리포트 작성 예정</p></div><span class="badge">예정</span></div>
+            </div>
+          </div>
+        </div>
+        <aside class="summary">
+          <div class="summary-head"><h2>업무 액션</h2><p>전문가 후속 관리</p></div>
+          <div class="summary-body">
+            <div class="grid">
+              <button class="btn full" data-toast="산출물 제출 프로토타입입니다." type="button">산출물 제출</button>
+              <button class="btn full" data-toast="정산 요청 프로토타입입니다." type="button">정산 요청</button>
+              <button class="btn danger full" data-screen="personal-issue" type="button">조정 요청</button>
+              <button class="btn full" data-screen="personal-ledger" type="button">정산 내역 보기</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="personal-issue" class="screen">
+      <div class="page-head">
+        <div><p class="kicker">전문가 / 이슈 조정</p><h1>지급 보류와 업무 범위 조정</h1><p class="lead">기업 검수 지연, 업무 범위 변경, 지급 보류가 생기면 전문가가 조정을 요청합니다. 기업 플로우의 ‘이슈 조정’에 대응됩니다.</p></div>
+        <button class="btn primary" data-screen="personal-ledger" type="button">조정 후 정산 보기</button>
+      </div>
+      <div class="flowbar">
+        <div class="flow-step active">기업 선택</div><div class="flow-step active">계약 조건</div><div class="flow-step active">정산 정보</div><div class="flow-step active">업무 관리</div><div class="flow-step active">이슈 조정</div><div class="flow-step">정산 내역</div>
+      </div>
+      <div class="grid two">
+        <div class="grid">
+          <div class="issue-card open">
+            <div class="section-row"><h2>검수 지연 이슈</h2><span class="badge red">지급 보류</span></div>
+            <p>2주차 산출물을 제출했지만 기업 검수가 지연되어 200,000원이 지급 대기 상태입니다.</p>
+            <div class="tags"><span class="tag">검수 지연</span><span class="tag">지급 보류</span><span class="tag">관리자 검토</span></div>
+          </div>
+          <div class="chat">
+            <div class="chat-log">
+              <div class="bubble me">2주차 산출물 제출 후 검수가 지연되고 있습니다. 지급 예정일을 확인하고 싶습니다.</div>
+              <div class="bubble">기업 담당자에게 검수 알림을 보냈습니다. 24시간 내 미응답 시 관리자 조정으로 이동합니다.</div>
+              <div class="bubble me">업무 범위가 추가된 부분도 함께 조정 요청합니다.</div>
+            </div>
+            <div class="chat-input"><input placeholder="조정 메시지를 입력하세요"><button class="btn" data-toast="조정 메시지 전송 프로토타입입니다." type="button">전송</button></div>
+          </div>
+        </div>
+        <aside class="summary">
+          <div class="summary-head"><h2>전문가 조정 옵션</h2><p>정책 확정 전 상태</p></div>
+          <div class="summary-body">
+            <div class="grid">
+              <button class="btn full" data-toast="검수 리마인드 프로토타입입니다." type="button">기업 검수 리마인드</button>
+              <button class="btn full" data-toast="업무 범위 조정은 확인 필요입니다." type="button">업무 범위 조정</button>
+              <button class="btn danger full" data-toast="지급 보류 해제 정책은 확인 필요입니다." type="button">지급 보류 이의제기</button>
+              <button class="btn primary full" data-screen="personal-ledger" type="button">조정 완료 처리</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="personal-ledger" class="screen">
+      <div class="page-head">
+        <div><p class="kicker">전문가 / 정산 내역</p><h1>전문가 지급과 보류 내역</h1><p class="lead">기업의 결제/차감 흐름과 1대1로 대응되는 전문가 정산, 지급 대기, 보류 내역입니다.</p></div>
+        <button class="btn" data-screen="personal-offer" type="button">새 제안 보기</button>
+      </div>
+      <div class="flowbar">
+        <div class="flow-step active">기업 선택</div><div class="flow-step active">계약 조건</div><div class="flow-step active">정산 정보</div><div class="flow-step active">업무 관리</div><div class="flow-step active">이슈 조정</div><div class="flow-step active">정산 내역</div>
+      </div>
+      <div class="grid">
+        <div class="grid four">
+          <div class="panel"><h2>누적 지급</h2><div class="price">200,000원</div><span class="sub">1주차 승인분</span></div>
+          <div class="panel"><h2>지급 대기</h2><div class="price">200,000원</div><span class="sub">2주차 검수 대기</span></div>
+          <div class="panel"><h2>보류 금액</h2><div class="price">200,000원</div><span class="sub">조정 요청 중</span></div>
+          <div class="panel"><h2>수수료/세금</h2><div class="price">확인 필요</div><span class="sub">정책 미확정</span></div>
+        </div>
+        <div class="panel">
+          <h2>정산 내역</h2>
+          <table>
+            <thead><tr><th>일시</th><th>기업 계약</th><th>상태</th><th>정산 금액</th><th>대응 기업 내역</th><th>메모</th></tr></thead>
+            <tbody>
+              <tr><td>2026. 7. 16</td><td>베러웍스 1주차</td><td><span class="badge green">지급 가능</span></td><td>200,000원</td><td>기업 -20C 차감</td><td>검수 승인 완료</td></tr>
+              <tr><td>2026. 7. 22</td><td>베러웍스 2주차</td><td><span class="badge blue">지급 대기</span></td><td>200,000원</td><td>기업 차감 예정</td><td>검수 대기</td></tr>
+              <tr><td>2026. 7. 23</td><td>베러웍스 2주차</td><td><span class="badge red">보류</span></td><td>200,000원</td><td>기업 보류 크레딧</td><td>이슈 조정 중</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="toast" class="toast">프로토타입입니다.</div>
+
+<script>
+  const screens = document.querySelectorAll('.screen');
+  const navButtons = document.querySelectorAll('[data-screen]');
+  const modeButtons = document.querySelectorAll('[data-mode]');
+  const toast = document.getElementById('toast');
+
+  function showToast(text){
+    toast.textContent = text;
+    toast.classList.add('show');
+    window.setTimeout(() => toast.classList.remove('show'), 1700);
+  }
+
+  function activate(screenId){
+    screens.forEach((screen) => screen.classList.toggle('active', screen.id === screenId));
+    document.querySelectorAll('.nav button').forEach((button) => {
+      button.classList.toggle('active', button.dataset.screen === screenId);
+    });
+    const isPersonal = screenId.startsWith('personal');
+    modeButtons.forEach((button) => button.classList.toggle('active', button.dataset.mode === (isPersonal ? 'personal' : 'company')));
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  navButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      if(button.dataset.toast) showToast(button.dataset.toast);
+      activate(button.dataset.screen);
+    });
+  });
+
+  modeButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      activate(button.dataset.mode === 'personal' ? 'personal-offer' : 'company-discover');
+    });
+  });
+
+  document.querySelectorAll('[data-toast]:not([data-screen])').forEach((button) => {
+    button.addEventListener('click', () => showToast(button.dataset.toast));
+  });
+
+  document.querySelectorAll('.person-card').forEach((card) => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.person-card').forEach((item) => item.classList.remove('selected'));
+      card.classList.add('selected');
+      showToast('항목이 선택되었습니다.');
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>플렉스웍 | 회원가입 동의 프로토타입</title>
+    <style>
+      :root {
+        color: #333333;
+        font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        min-width: 320px;
+        margin: 0;
+        background: #f7f7f7;
+      }
+
+      main {
+        width: min(100%, 520px);
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 64px 24px;
+        background: #ffffff;
+      }
+
+      h1 {
+        margin: 0 0 40px;
+        color: #333333;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1.4;
+        text-align: center;
+      }
+
+      .section-label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333333;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .required { color: #d82828; }
+
+      .consent-card {
+        overflow: hidden;
+        border: 1px solid #f0f0f0;
+        border-radius: 8px;
+      }
+
+      .all-consent {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        padding: 12px 20px;
+        background: #f7f7f7;
+      }
+
+      .all-copy { display: grid; gap: 2px; }
+
+      .all-copy strong {
+        color: #333333;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.6;
+      }
+
+      .all-copy span {
+        color: #666666;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .consent-list {
+        display: grid;
+        gap: 12px;
+        padding: 20px;
+      }
+
+      .consent-group { display: grid; gap: 8px; }
+
+      .consent-row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        min-height: 24px;
+      }
+
+      .consent-row label {
+        flex: 1;
+        color: #333333;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1.6;
+      }
+
+      .optional { color: #999999; }
+
+      .checkbox {
+        position: relative;
+        display: inline-grid;
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        place-items: center;
+      }
+
+      .checkbox input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+      }
+
+      .checkbox-icon {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+      }
+
+      .checkbox-icon circle { fill: #ffffff; stroke: #cccccc; stroke-width: 1.4; }
+      .checkbox-icon path { display: none; }
+      .checkbox input:checked + .checkbox-icon circle { fill: #333333; stroke: #333333; }
+      .checkbox input:checked + .checkbox-icon path { display: block; }
+      .checkbox input:focus-visible + .checkbox-icon { outline: 2px solid #50c879; outline-offset: 2px; border-radius: 50%; }
+
+      .detail-link {
+        display: grid;
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        place-items: center;
+        color: #999999;
+        text-decoration: none;
+      }
+
+      .notice {
+        position: relative;
+        margin-top: 1px;
+        padding: 16px;
+        border-radius: 12px;
+        background: #1a1a1a;
+        color: #ffffff;
+      }
+
+      .notice::before {
+        position: absolute;
+        top: -9px;
+        left: 14px;
+        width: 0;
+        height: 0;
+        border-right: 8px solid transparent;
+        border-bottom: 9px solid #1a1a1a;
+        border-left: 8px solid transparent;
+        content: "";
+      }
+
+      .notice-title {
+        margin: 0 0 12px;
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 1.4;
+      }
+
+      .notice-list {
+        display: grid;
+        gap: 6px;
+        margin: 0 0 12px;
+        padding: 0;
+        color: #cccccc;
+        font-size: 14px;
+        line-height: 1.4;
+        list-style: none;
+      }
+
+      .restore-button {
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #ffffff;
+        cursor: pointer;
+        font: inherit;
+        font-size: 14px;
+        text-decoration: underline;
+      }
+
+      .restore-button:focus-visible { outline: 2px solid #50c879; outline-offset: 3px; }
+
+      @media (max-width: 420px) {
+        main { padding: 40px 16px; }
+        .all-consent, .consent-list { padding-right: 16px; padding-left: 16px; }
+        .consent-row label { font-size: 15px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>이메일로 회원가입</h1>
+
+      <section aria-labelledby="consent-title">
+        <span id="consent-title" class="section-label">이용 약관 및 수집 <span class="required">*</span></span>
+
+        <div class="consent-card">
+          <div class="all-consent">
+            <span class="checkbox">
+              <input id="agreeAll" type="checkbox" aria-label="전체 동의" />
+              <svg class="checkbox-icon" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8.3"/><path d="M5 9.1 7.6 11.7 13.1 6.2" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg>
+            </span>
+            <label class="all-copy" for="agreeAll">
+              <strong>전체 동의</strong>
+              <span>서비스 이용약관, 개인정보 수집 및 이용, 마케팅 전체 동의</span>
+            </label>
+          </div>
+
+          <div class="consent-list">
+            <div class="consent-row">
+              <span class="checkbox"><input id="agreeAge" type="checkbox" checked /><svg class="checkbox-icon" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8.3"/><path d="M5 9.1 7.6 11.7 13.1 6.2" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span>
+              <label for="agreeAge">(필수) 만 14세 이상입니다.</label>
+            </div>
+
+            <div class="consent-row">
+              <span class="checkbox"><input id="agreeTerms" type="checkbox" checked /><svg class="checkbox-icon" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8.3"/><path d="M5 9.1 7.6 11.7 13.1 6.2" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span>
+              <label for="agreeTerms">(필수) 서비스 이용약관 동의</label>
+              <a class="detail-link" href="https://flexworkpro.io/legals/terms" target="_blank" rel="noreferrer" aria-label="서비스 이용약관 보기">›</a>
+            </div>
+
+            <div class="consent-row">
+              <span class="checkbox"><input id="agreePrivacy" type="checkbox" checked /><svg class="checkbox-icon" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8.3"/><path d="M5 9.1 7.6 11.7 13.1 6.2" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span>
+              <label for="agreePrivacy">(필수) 개인정보 수집 및 이용 동의</label>
+              <a class="detail-link" href="https://flexworkpro.io/legals/privacy" target="_blank" rel="noreferrer" aria-label="개인정보 수집 및 이용 동의 보기">›</a>
+            </div>
+
+            <div class="consent-group">
+              <div class="consent-row">
+                <span class="checkbox"><input id="agreeNews" type="checkbox" checked /><svg class="checkbox-icon" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8.3"/><path d="M5 9.1 7.6 11.7 13.1 6.2" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span>
+                <label for="agreeNews"><span class="optional">(선택)</span> 채용 소식 · 커뮤니티 · 커리어 콘텐츠 · 뉴스레터 등 맞춤 정보 수신</label>
+              </div>
+              <div id="newsNotice" class="notice" hidden>
+                <p class="notice-title">😕 이 정보를 받을 수 없게 돼요</p>
+                <ul class="notice-list"><li>• 내 직무 맞춤 채용 공고 추천</li><li>• 커리어 인사이트 · 현직자 뉴스레터</li><li>• 선착순 커뮤니티 이벤트 오픈 알림</li></ul>
+                <button class="restore-button" type="button" data-restore="agreeNews">↩ 다시 받기</button>
+              </div>
+            </div>
+
+            <div class="consent-group">
+              <div class="consent-row">
+                <span class="checkbox"><input id="agreePosition" type="checkbox" /><svg class="checkbox-icon" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8.3"/><path d="M5 9.1 7.6 11.7 13.1 6.2" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span>
+                <label for="agreePosition"><span class="optional">(선택)</span> 맞춤 추천 포지션 정보 수신 (미동의시 포지션 추천이 제한됩니다.)</label>
+              </div>
+              <div id="positionNotice" class="notice">
+                <p class="notice-title">😮 나한테 딱 맞는 일감을 놓치게 돼요</p>
+                <ul class="notice-list"><li>• 경력·스킬 분석으로 자동 추천되는 포지션</li><li>• 풀타임·파트타임·프로젝트 포지션 추천이 연결되지 않아요</li><li>• 동의하면 플렉스웍이 나 대신 기회를 찾아줘요</li></ul>
+                <button class="restore-button" type="button" data-restore="agreePosition">↩ 다시 받기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const consentIds = ["agreeAge", "agreeTerms", "agreePrivacy", "agreeNews", "agreePosition"];
+      const allConsent = document.querySelector("#agreeAll");
+
+      function syncAllConsent() {
+        const checkboxes = consentIds.map((id) => document.querySelector(`#${id}`));
+        allConsent.checked = checkboxes.every((checkbox) => checkbox.checked);
+        allConsent.indeterminate = !allConsent.checked && checkboxes.some((checkbox) => checkbox.checked);
+      }
+
+      function syncNotices() {
+        document.querySelector("#newsNotice").hidden = document.querySelector("#agreeNews").checked;
+        document.querySelector("#positionNotice").hidden = document.querySelector("#agreePosition").checked;
+      }
+
+      function syncInterface() {
+        syncAllConsent();
+        syncNotices();
+      }
+
+      document.querySelectorAll(".checkbox-icon").forEach((icon) => {
+        icon.addEventListener("click", () => {
+          const checkbox = icon.previousElementSibling;
+          checkbox.checked = !checkbox.checked;
+          checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+        });
+      });
+
+      allConsent.addEventListener("change", () => {
+        consentIds.forEach((id) => { document.querySelector(`#${id}`).checked = allConsent.checked; });
+        syncInterface();
+      });
+
+      consentIds.forEach((id) => document.querySelector(`#${id}`).addEventListener("change", syncInterface));
+      document.querySelectorAll("[data-restore]").forEach((button) => {
+        button.addEventListener("click", () => {
+          document.querySelector(`#${button.dataset.restore}`).checked = true;
+          syncInterface();
+        });
+      });
+
+      syncInterface();
+    </script>
+  </body>
+</html>

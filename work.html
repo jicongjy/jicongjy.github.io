@@ -4,29 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="홍지영 포트폴리오 작업 상세" />
-  <title>작업 상세 — 홍지영</title>
+  <title>작업 상세 | 홍지영</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="work.css" />
-  <link rel="stylesheet" href="details.css" />
-  <link rel="stylesheet" href="interactions.css" />
-  <link rel="stylesheet" href="presentation.css" />
+  <link rel="icon" href="logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="case.css" />
+  <link rel="stylesheet" href="logo.css" />
+  <script src="loader.js"></script>
 </head>
-<body class="work-page">
-  <div class="cursor" aria-hidden="true"><span>VIEW</span></div>
-  <div class="case-layout">
-    <aside class="case-rail" aria-label="프로젝트 정보">
-      <a class="wordmark" href="index.html" aria-label="포트폴리오 홈">HJ<span>.</span></a>
-      <div class="case-project-panel" data-case-panel></div>
-    </aside>
-    <div class="case-stage">
-      <header class="case-nav">
-        <a class="back-link" href="index.html#work">작업 목록</a>
-      </header>
-      <main id="case-root" aria-live="polite"></main>
-    </div>
+<body>
+  <div class="layout">
+    <aside class="rail" id="rail" aria-label="프로젝트 정보"></aside>
+    <main class="stage" id="stage"></main>
   </div>
+  <script src="order.js"></script>
+  <script src="data-product.js"></script>
+  <script src="data-new.js"></script>
+  <script src="data-deck.js"></script>
+  <script src="data-client.js"></script>
   <script src="work.js"></script>
 </body>
 </html>

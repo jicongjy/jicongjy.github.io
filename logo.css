@@ -1,0 +1,17 @@
+/* 로고와 로딩 */
+.mark{width:34px;height:34px;display:block}
+.mark .s{fill:none;stroke:#f1f0eb;stroke-width:3.6;stroke-linecap:round;stroke-linejoin:round}
+.mark .d{fill:#d8f45a}
+.wordmark{display:inline-block;line-height:0}
+.wordmark:hover .d{transform-origin:14.5px 34.5px;animation:dotpop .5s ease}
+@keyframes dotpop{40%{transform:scale(1.8)}}
+#loader{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#0d0d0d;transition:opacity .45s ease,visibility .45s}
+#loader.out{opacity:0;visibility:hidden}
+#loader svg{width:92px;height:92px}
+#loader .s{fill:none;stroke:#f1f0eb;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 2;stroke-dashoffset:1.03;opacity:0;animation:draw .55s cubic-bezier(.6,0,.2,1) forwards}
+#loader .p2{animation-delay:.25s}
+#loader .p3{animation-delay:.5s;animation-duration:.7s}
+#loader .d{fill:#d8f45a;opacity:0;transform-box:fill-box;transform-origin:center;animation:land .5s .95s cubic-bezier(.3,1.6,.5,1) forwards}
+@keyframes draw{0%{opacity:1;stroke-dashoffset:1.03}100%{opacity:1;stroke-dashoffset:0}}
+@keyframes land{0%{opacity:0;transform:translateY(-14px) scale(.4)}100%{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#loader .s{animation:none;stroke-dashoffset:0;stroke-dasharray:none}#loader .d{animation:none;opacity:1}#loader{transition:none}}

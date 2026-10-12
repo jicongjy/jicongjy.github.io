@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>구글 미트 화면 공유 안내 애니메이션</title>
+<style>
+:root{
+  /* Flexwork_Design_System.md 공식 토큰 기준 */
+  --ink:#0B0B0B;
+  --ink-2:#333333;
+  --muted:#666666;
+  --muted-2:#999999;
+  --line:#F0F0F0;
+  --line-strong:#E5E5E5;
+  --line-2:#E1DFD9;
+  --paper:#FFFFFF;
+  --paper-2:#F7F7F7;
+  --dark:#333333;
+  --chip-bg:#F0EFED;
+  --badge-bg:#E1DFD9;
+
+  --accent:#50C879;
+  --accent-2:#48B46D;
+  --accent-soft:#EEFAF2;
+  --accent-ink:#000000;
+
+  --signal:#D82828;
+  --signal-strong:#B00C0C;
+  --signal-soft:#FEECEC;
+
+  --warn:#B86B00;
+  --warn-soft:#FFF6E8;
+
+  --meet:#1A73E8;
+
+  --mono:Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f7f7f7;font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;padding:24px 12px}
+/* ── meet demo animation (크롬 창 + Meet 통화 화면 + 화면 공유 선택 과정 재현) ── */
+.meet-demo{display:flex;flex-direction:column;align-items:center}
+.meet-demo-window{position:relative;width:100%;max-width:400px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 12px 32px rgba(0,0,0,.16);border:1px solid var(--line)}
+
+/* 브라우저 타이틀바 */
+.meet-demo-titlebar{display:flex;align-items:center;gap:6px;padding:9px 10px;background:#EBEBEA}
+.meet-demo-dot{width:8px;height:8px;border-radius:50%}
+.meet-demo-dot--r{background:#FF5F57}
+.meet-demo-dot--y{background:#FEBC2E}
+.meet-demo-dot--g{background:#28C840}
+
+/* 크롬 탭 여러 개 */
+.meet-demo-tabstrip{display:flex;align-items:flex-end;gap:3px;padding:6px 8px 0;background:#EBEBEA}
+.meet-demo-btab{display:flex;align-items:center;gap:5px;padding:7px 10px;border-radius:7px 7px 0 0;background:#DCDCDA;max-width:118px;overflow:hidden}
+.meet-demo-btab-dot{width:8px;height:8px;border-radius:50%;background:var(--muted-2);flex:none}
+.meet-demo-btab-text{font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* 주소창 */
+.meet-demo-addressbar{display:flex;align-items:center;gap:6px;padding:7px 12px;background:#fff;border-bottom:1px solid var(--line);animation:meetPageDim 12s ease-in-out infinite}
+.meet-demo-lock{width:10px;height:10px;border:1.4px solid var(--muted-2);border-radius:2px;flex:none}
+.meet-demo-url{font-size:11px;color:var(--muted);font-family:var(--mono)}
+
+/* Meet 통화 화면 */
+.meet-demo-callarea{position:relative;height:260px;background:var(--dark);overflow:hidden}
+.meet-demo-meetview{animation:meetPageDim 12s ease-in-out infinite}
+/* 탭 전환 시 Meet 화면이 사라지고 퀘스트 탭(설정 화면) 미리보기가 나타남 */
+@keyframes meetPageDim{
+  0%,89%{opacity:1}
+  93%,100%{opacity:0}
+}
+.meet-demo-questpage{position:absolute;inset:0;background:#fff;padding:22px 20px;opacity:0;animation:meetQuestPage 12s ease-in-out infinite}
+.meet-demo-qp-top{display:flex;align-items:center;gap:6px}
+.meet-demo-qp-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+.meet-demo-qp-brand{font-size:11px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+.meet-demo-qp-label{font-size:10px;font-weight:700;color:var(--muted);margin:18px 0 0}
+.meet-demo-qp-title{font-size:17px;font-weight:800;letter-spacing:-.02em;color:var(--ink);line-height:1.32;margin:7px 0 0}
+.meet-demo-qp-steps{display:flex;gap:6px;margin-top:20px}
+.meet-demo-qp-steps span{flex:1;height:22px;border-radius:5px;border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;color:var(--muted);font-family:var(--mono)}
+.meet-demo-qp-steps span.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.meet-demo-qp-btn{margin-top:14px;height:30px;border-radius:4px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:#000}
+@keyframes meetQuestPage{
+  0%,89%{opacity:0}
+  93%,100%{opacity:1}
+}
+.meet-demo-callbar{position:absolute;left:12px;top:10px;font-size:10.5px;color:rgba(255,255,255,.55);display:flex;align-items:center;gap:6px}
+
+/* 참가자 수 배지 */
+.meet-demo-pcount{position:absolute;right:12px;top:9px;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.16)}
+.meet-demo-pcount-n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+.meet-demo-pcount-n--1{animation:meetCount1 12s ease-in-out infinite}
+.meet-demo-pcount-n--2{opacity:0;animation:meetCount2 12s ease-in-out infinite}
+@keyframes meetCount1{0%,9%{opacity:1}14%,95%{opacity:0}99%,100%{opacity:1}}
+@keyframes meetCount2{0%,9%{opacity:0}14%,95%{opacity:1}99%,100%{opacity:0}}
+
+/* 참가자 타일 (나 / 녹화봇) · 구글 미트 실제 타일 스타일 */
+.meet-demo-ptile{position:absolute;top:32%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:7px}
+.meet-demo-ptile--me{left:50%;animation:meetTileMe 12s ease-in-out infinite}
+.meet-demo-ptile--bot{left:68%;animation:meetTileBot 12s ease-in-out infinite}
+@keyframes meetTileMe{
+  0%,9%{left:50%}
+  14%,94%{left:32%}
+  99%,100%{left:50%}
+}
+@keyframes meetTileBot{
+  0%,10%{opacity:0;transform:translate(-50%,-50%) scale(.3)}
+  14%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}
+  17%,94%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  99%,100%{opacity:0;transform:translate(-50%,-50%) scale(.3)}
+}
+.meet-demo-tilebox{position:relative;width:104px;height:68px;border-radius:9px;background:#3C4043;display:flex;align-items:center;justify-content:center}
+.meet-demo-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent-2);flex:none}
+.meet-demo-avatar--bot{background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:6.5px;font-weight:800;color:#000;letter-spacing:0}
+.meet-demo-tilebadge{position:absolute;right:-4px;top:-4px;width:15px;height:15px;border-radius:50%;background:rgba(0,0,0,.55)}
+.meet-demo-tilebadge--on{background:var(--meet)}
+.meet-demo-ptile-label{font-size:10.5px;color:rgba(255,255,255,.7)}
+
+.meet-demo-toolbar{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;align-items:center;gap:8px}
+.meet-demo-tool{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.14)}
+.meet-demo-tool--end{width:34px;background:var(--signal)}
+.meet-demo-tool--share{position:relative;animation:meetShareIcon 12s ease-in-out infinite}
+.meet-demo-tool--share::after{content:"";position:absolute;left:50%;top:50%;width:10px;height:8px;transform:translate(-50%,-50%);border:1.4px solid #fff;border-bottom:0;border-radius:2px 2px 0 0}
+@keyframes meetShareIcon{
+  0%,36%{background:rgba(255,255,255,.14);box-shadow:none}
+  40%,94%{background:var(--accent);box-shadow:0 0 0 3px rgba(80,200,121,.3)}
+  99%,100%{background:rgba(255,255,255,.14);box-shadow:none}
+}
+
+/* 공유 항목 선택 대화상자 (통화 화면 위 오버레이) */
+.meet-demo-picker{position:absolute;left:6%;right:6%;top:5%;background:#fff;border-radius:10px;padding:11px;box-shadow:0 16px 36px rgba(0,0,0,.28);opacity:0;transform:scale(.96);animation:meetPicker 12s ease-in-out infinite}
+@keyframes meetPicker{
+  0%,38%{opacity:0;transform:scale(.96)}
+  44%,76%{opacity:1;transform:scale(1)}
+  82%,100%{opacity:0;transform:scale(.96)}
+}
+.meet-demo-picker-title{font-size:11.5px;font-weight:700;color:var(--ink);margin:0 0 7px;line-height:1.4}
+.meet-demo-ptabbar{display:flex;gap:14px;border-bottom:1px solid var(--line);margin-bottom:7px}
+.meet-demo-ptab{font-size:11.5px;font-weight:600;padding:0 0 7px;border-bottom:2px solid transparent;color:var(--muted)}
+.meet-demo-ptab--chrome{animation:meetTabChrome 12s ease-in-out infinite}
+.meet-demo-ptab--full{animation:meetTabFull 12s ease-in-out infinite}
+@keyframes meetTabChrome{
+  0%,48%{color:var(--ink);border-bottom-color:var(--accent)}
+  54%,80%{color:var(--muted);border-bottom-color:transparent}
+  86%,100%{color:var(--ink);border-bottom-color:var(--accent)}
+}
+@keyframes meetTabFull{
+  0%,48%{color:var(--muted);border-bottom-color:transparent}
+  54%,80%{color:var(--ink);border-bottom-color:var(--accent)}
+  86%,100%{color:var(--muted);border-bottom-color:transparent}
+}
+.meet-demo-pbody{position:relative;height:74px}
+.meet-demo-panel{position:absolute;inset:0}
+.meet-demo-panel--tabs{animation:meetPanelTabs 12s ease-in-out infinite}
+@keyframes meetPanelTabs{
+  0%,48%{opacity:1}
+  54%,80%{opacity:0}
+  86%,100%{opacity:1}
+}
+.meet-demo-tabrow{display:flex;align-items:center;gap:8px;padding:6px 6px;border-radius:6px}
+.meet-demo-tabrow .dot{width:14px;height:14px;border-radius:4px;background:var(--paper-2);flex:none}
+.meet-demo-tabrow .bar{height:7px;border-radius:4px;background:var(--paper-2)}
+.meet-demo-panel--screen{display:flex;gap:10px;align-items:flex-start;animation:meetPanelScreen 12s ease-in-out infinite}
+@keyframes meetPanelScreen{
+  0%,48%{opacity:0}
+  54%,80%{opacity:1}
+  86%,100%{opacity:0}
+}
+.meet-demo-thumb-col{flex:1;text-align:center}
+.meet-demo-thumb{height:46px;border-radius:6px;background:linear-gradient(135deg,var(--paper-2),var(--line));border:2px solid transparent;box-shadow:none}
+.meet-demo-thumb-col:first-child .meet-demo-thumb{animation:meetThumbSelect 12s ease-in-out infinite}
+@keyframes meetThumbSelect{
+  0%,62%{border-color:transparent;box-shadow:none}
+  66%,80%{border-color:var(--accent);box-shadow:0 0 0 3px rgba(80,200,121,.22)}
+  86%,100%{border-color:transparent;box-shadow:none}
+}
+.meet-demo-thumb-label{display:block;font-size:10.5px;color:var(--muted);margin-top:5px}
+.meet-demo-pfooter{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.meet-demo-btn{border:0;border-radius:6px;font-size:11.5px;font-weight:700;padding:7px 13px;white-space:nowrap}
+.meet-demo-btn--cancel{background:none;color:var(--muted)}
+.meet-demo-btn--share{animation:meetShareBtn 12s ease-in-out infinite}
+@keyframes meetShareBtn{
+  0%,62%{background:var(--line-strong);color:var(--muted-2);transform:scale(1)}
+  66%,72%{background:var(--accent);color:#fff;transform:scale(1)}
+  74%{background:var(--accent-2);color:#fff;transform:scale(.94)}
+  76%{background:var(--accent);color:#fff;transform:scale(1)}
+  86%,100%{background:var(--line-strong);color:var(--muted-2);transform:scale(1)}
+}
+
+/* 공유 시작됨 배지 */
+.meet-demo-sharebadge{position:absolute;right:12px;top:10px;display:flex;gap:6px;opacity:0;transform:translateY(-4px);animation:meetShareBadge 12s ease-in-out infinite}
+.meet-demo-sharebadge span{font-size:10.5px;font-weight:700;padding:5px 10px;border-radius:999px;white-space:nowrap}
+.meet-demo-sharebadge .on{background:var(--accent);color:#000}
+.meet-demo-sharebadge .stop{background:rgba(255,255,255,.16);color:#fff}
+@keyframes meetShareBadge{
+  0%,82%{opacity:0;transform:translateY(-4px)}
+  86%,94%{opacity:1;transform:translateY(0)}
+  99%,100%{opacity:0;transform:translateY(-4px)}
+}
+
+.meet-demo-cursor{position:absolute;width:13px;height:13px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(80,200,121,.28);opacity:0;animation:meetCursor 12s ease-in-out infinite}
+@keyframes meetCursor{
+  0%,30%{left:14%;top:10%;opacity:0;transform:translate(-50%,-50%) scale(1)}
+  33%{opacity:1}
+  36%{left:52%;top:90%}
+  38%{transform:translate(-50%,-50%) scale(.8)}
+  40%,44%{left:52%;top:90%;transform:translate(-50%,-50%) scale(1)}
+  48%{left:72%;top:20%}
+  50%{transform:translate(-50%,-50%) scale(.8)}
+  52%,56%{left:72%;top:20%;transform:translate(-50%,-50%) scale(1)}
+  60%{left:34%;top:40%}
+  62%{transform:translate(-50%,-50%) scale(.8)}
+  64%,68%{left:34%;top:40%;transform:translate(-50%,-50%) scale(1)}
+  72%{left:80%;top:62%}
+  74%{transform:translate(-50%,-50%) scale(.8)}
+  76%,80%{left:80%;top:62%;transform:translate(-50%,-50%) scale(1)}
+  84%,100%{left:80%;top:62%;opacity:0}
+}
+
+/* 탭 복귀: 공유가 시작되면 Meet 탭에서 퀘스트 탭으로 활성 탭 전환 */
+.meet-demo-btab--tab1{animation:meetBtab1Bg 12s ease-in-out infinite}
+.meet-demo-btab--tab1 .meet-demo-btab-dot{animation:meetBtab1Dot 12s ease-in-out infinite}
+.meet-demo-btab--tab1 .meet-demo-btab-text{animation:meetBtab1Text 12s ease-in-out infinite}
+.meet-demo-btab--tab2{animation:meetBtab2Bg 12s ease-in-out infinite}
+.meet-demo-btab--tab2 .meet-demo-btab-dot{animation:meetBtab2Dot 12s ease-in-out infinite}
+.meet-demo-btab--tab2 .meet-demo-btab-text{animation:meetBtab2Text 12s ease-in-out infinite}
+@keyframes meetBtab1Bg{0%,89%{background:#fff}93%,100%{background:#DCDCDA}}
+@keyframes meetBtab1Dot{0%,89%{background:var(--meet)}93%,100%{background:var(--muted-2)}}
+@keyframes meetBtab1Text{0%,89%{color:var(--ink);font-weight:600}93%,100%{color:var(--muted);font-weight:400}}
+@keyframes meetBtab2Bg{0%,89%{background:#DCDCDA}93%,100%{background:#fff}}
+@keyframes meetBtab2Dot{0%,89%{background:var(--muted-2)}93%,100%{background:var(--meet)}}
+@keyframes meetBtab2Text{0%,89%{color:var(--muted);font-weight:400}93%,100%{color:var(--ink);font-weight:600}}
+
+
+</style></head><body>
+    <div class="meet-demo" aria-hidden="true">
+      <div class="meet-demo-window">
+        <div class="meet-demo-titlebar">
+          <span class="meet-demo-dot meet-demo-dot--r"></span><span class="meet-demo-dot meet-demo-dot--y"></span><span class="meet-demo-dot meet-demo-dot--g"></span>
+        </div>
+        <div class="meet-demo-tabstrip">
+          <div class="meet-demo-btab meet-demo-btab--tab1"><span class="meet-demo-btab-dot"></span><span class="meet-demo-btab-text">Meet - [Flexwork] AI 역량 퀘스트</span></div>
+          <div class="meet-demo-btab meet-demo-btab--tab2"><span class="meet-demo-btab-dot"></span><span class="meet-demo-btab-text">AI 역량 퀘스트</span></div>
+          <div class="meet-demo-btab"><span class="meet-demo-btab-dot"></span><span class="meet-demo-btab-text">문서</span></div>
+        </div>
+        <div class="meet-demo-addressbar">
+          <span class="meet-demo-lock"></span><span class="meet-demo-url">meet.google.com/abc-defg-hij</span>
+        </div>
+        <div class="meet-demo-callarea">
+          <div class="meet-demo-meetview">
+            <div class="meet-demo-callbar">11:54 · [Flexwork] AI 역량 퀘스트</div>
+            <div class="meet-demo-pcount">
+              <span class="meet-demo-pcount-n meet-demo-pcount-n--1">1</span>
+              <span class="meet-demo-pcount-n meet-demo-pcount-n--2">2</span>
+            </div>
+            <div class="meet-demo-ptile meet-demo-ptile--me">
+              <div class="meet-demo-tilebox">
+                <div class="meet-demo-avatar"></div>
+                <span class="meet-demo-tilebadge"></span>
+              </div>
+              <span class="meet-demo-ptile-label">지영</span>
+            </div>
+            <div class="meet-demo-ptile meet-demo-ptile--bot">
+              <div class="meet-demo-tilebox">
+                <div class="meet-demo-avatar meet-demo-avatar--bot">Flexwork</div>
+                <span class="meet-demo-tilebadge meet-demo-tilebadge--on"></span>
+              </div>
+              <span class="meet-demo-ptile-label">Flexwork 녹화봇</span>
+            </div>
+            <div class="meet-demo-toolbar">
+              <span class="meet-demo-tool"></span>
+              <span class="meet-demo-tool"></span>
+              <span class="meet-demo-tool"></span>
+              <span class="meet-demo-tool meet-demo-tool--share"></span>
+              <span class="meet-demo-tool"></span>
+              <span class="meet-demo-tool meet-demo-tool--end"></span>
+            </div>
+            <div class="meet-demo-picker">
+              <p class="meet-demo-picker-title">meet.google.com님과 공유할 항목을 선택하세요</p>
+              <div class="meet-demo-ptabbar">
+                <span class="meet-demo-ptab meet-demo-ptab--chrome">Chrome 탭</span>
+                <span class="meet-demo-ptab meet-demo-ptab--full">전체 화면</span>
+              </div>
+              <div class="meet-demo-pbody">
+                <div class="meet-demo-panel meet-demo-panel--tabs">
+                  <div class="meet-demo-tabrow"><span class="dot"></span><span class="bar" style="width:66%"></span></div>
+                  <div class="meet-demo-tabrow"><span class="dot"></span><span class="bar" style="width:52%"></span></div>
+                  <div class="meet-demo-tabrow"><span class="dot"></span><span class="bar" style="width:58%"></span></div>
+                </div>
+                <div class="meet-demo-panel meet-demo-panel--screen">
+                  <div class="meet-demo-thumb-col"><div class="meet-demo-thumb"></div><span class="meet-demo-thumb-label">화면 1</span></div>
+                  <div class="meet-demo-thumb-col"><div class="meet-demo-thumb"></div><span class="meet-demo-thumb-label">화면 2</span></div>
+                </div>
+              </div>
+              <div class="meet-demo-pfooter">
+                <span class="meet-demo-btn meet-demo-btn--cancel">취소</span>
+                <span class="meet-demo-btn meet-demo-btn--share">공유</span>
+              </div>
+            </div>
+            <div class="meet-demo-sharebadge">
+              <span class="on">발표 중</span>
+              <span class="stop">발표 중지</span>
+            </div>
+            <div class="meet-demo-cursor"></div>
+          </div>
+          <div class="meet-demo-questpage">
+            <div class="meet-demo-qp-top"><span class="meet-demo-qp-dot"></span><span class="meet-demo-qp-brand">Flexwork</span></div>
+            <p class="meet-demo-qp-label">3단계</p>
+            <p class="meet-demo-qp-title">시작 전 3가지만<br>확인해 주세요</p>
+            <div class="meet-demo-qp-steps"><span class="on">01</span><span>02</span><span>03</span></div>
+            <div class="meet-demo-qp-btn">Google Meet 입장하기</div>
+          </div>
+        </div>
+      </div>
+    </div>
+<script>(function(){var d=document.querySelector('.meet-demo');function fit(){var k=Math.min(1,(window.innerWidth-24)/420);d.style.zoom=k;}fit();window.addEventListener('resize',fit);})();</script>
+</body></html>

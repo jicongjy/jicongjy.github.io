@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="760" viewBox="0 0 1800 760" fill="none">
+  <!-- Vector-only, heavy silhouette exploration. No type, no strokes, no accent colour. -->
+  <rect width="1800" height="760" fill="#0D0D0D"/>
+  <path d="M600 72V688M1200 72V688" stroke="#3A3A38" stroke-width="2"/>
+
+  <!-- 01: Junction. A compact, solid ㅈ construction. -->
+  <g transform="translate(300 380)" fill="#F1F0EB">
+    <rect x="-148" y="-150" width="296" height="56"/>
+    <rect x="-28" y="-94" width="56" height="188"/>
+    <rect x="-148" y="94" width="296" height="56"/>
+  </g>
+
+  <!-- 02: Fold. One continuous folded slab; open end makes it directional. -->
+  <g transform="translate(900 380)" fill="#F1F0EB">
+    <path d="M-150-150H150V-78H-78V78H150V150H-150V6H-78V-78H-150V-150Z"/>
+  </g>
+
+  <!-- 03: Shift. A solid block with an intentional offset cut, like a changed screen state. -->
+  <g transform="translate(1500 380)">
+    <path d="M-150-150H150V-42H42V42H150V150H-150V42H-42V-42H-150V-150Z" fill="#F1F0EB"/>
+    <rect x="-42" y="-42" width="84" height="84" fill="#0D0D0D"/>
+  </g>
+
+  <!-- Minimal geometric keys: 1, 2, 3 expressed as count rather than type. -->
+  <g fill="#F1F0EB" opacity=".45">
+    <rect x="104" y="624" width="12" height="12"/>
+    <rect x="704" y="624" width="12" height="12"/><rect x="724" y="624" width="12" height="12"/>
+    <rect x="1304" y="624" width="12" height="12"/><rect x="1324" y="624" width="12" height="12"/><rect x="1344" y="624" width="12" height="12"/>
+  </g>
+</svg>

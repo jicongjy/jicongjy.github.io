@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="760" viewBox="0 0 1600 760" fill="none">
+  <!-- Refined 02 / 03: every part is locked to a single 64px unit grid. -->
+  <rect width="1600" height="760" fill="#0D0D0D"/>
+  <path d="M800 72V688" stroke="#31312F" stroke-width="2"/>
+
+  <!-- 02 refined — Interlock. A balanced ㅎ·ㅈ-inspired structural mark. -->
+  <g transform="translate(400 380)" fill="#F1F0EB">
+    <rect x="-192" y="-160" width="144" height="64"/>
+    <rect x="48" y="-160" width="144" height="64"/>
+    <rect x="-192" y="-96" width="64" height="256"/>
+    <rect x="128" y="-96" width="64" height="256"/>
+    <rect x="-128" y="-32" width="256" height="64"/>
+    <rect x="-48" y="32" width="96" height="128"/>
+  </g>
+
+  <!-- 03 refined — Loop. One solid, asymmetric S-shaped ribbon, no joins or loose terminals. -->
+  <g transform="translate(1200 380)" fill="#F1F0EB">
+    <path d="M-176-160H176V-96H-96V-32H96C149-32 176 0 176 48V160H-176V96H96V32H-96C-149 32-176 0-176-48V-160Z"/>
+    <rect x="-32" y="-96" width="64" height="64" fill="#0D0D0D"/>
+    <rect x="-32" y="32" width="64" height="64" fill="#0D0D0D"/>
+  </g>
+
+  <!-- Two vector count keys, deliberately quiet. -->
+  <g fill="#F1F0EB" opacity=".42">
+    <rect x="104" y="624" width="12" height="12"/><rect x="124" y="624" width="12" height="12"/>
+    <rect x="904" y="624" width="12" height="12"/><rect x="924" y="624" width="12" height="12"/><rect x="944" y="624" width="12" height="12"/>
+  </g>
+</svg>

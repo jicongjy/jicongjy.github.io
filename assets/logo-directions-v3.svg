@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="760" viewBox="0 0 1800 760" fill="none">
+  <!-- Three vector-only identity routes: custom Hangul / initials emblem / abstract author mark. -->
+  <rect width="1800" height="760" fill="#0D0D0D"/>
+  <path d="M600 72V688M1200 72V688" stroke="#31312F" stroke-width="2"/>
+
+  <!-- 01: Custom Hangul. A compressed, deliberately uneven ㅎㅈㅇ word-sign. -->
+  <g transform="translate(300 380)" fill="#F1F0EB">
+    <!-- ㅎ : a broad aperture and an offset lower body -->
+    <path d="M-215-118H-95V-74H-151V-18H-215V-118ZM-191 18H-95V118H-215V74H-151V62H-215V18Z"/>
+    <rect x="-195" y="-2" width="100" height="38"/>
+    <!-- ㅈ : a tall, dense centre character, joined to its neighbour -->
+    <path d="M-53-118H92V-68H42V118H-13V-68H-53V-118Z"/>
+    <rect x="-53" y="68" width="145" height="50"/>
+    <!-- ㅇ : open, not circular, to avoid a polite font-like finish -->
+    <path fill-rule="evenodd" d="M132-118H223C257-118 277-96 277-61V-12H224V-55C224-70 216-78 201-78H184V-18H277V32H184V78H223V118H132V-118Z"/>
+  </g>
+
+  <!-- 02: Initials emblem. ㅎ and ㅈ share a single bold enclosure. -->
+  <g transform="translate(900 380)">
+    <path d="M-146-146H30C99-146 146-99 146-30V146H50V48H-50V146H-146V-146ZM-50-50V-16H50V-30C50-61 33-74 3-74H-50V-50Z" fill="#F1F0EB"/>
+    <path d="M-146 48H-50V-16H50V48H146V-50H98V-98H-98V-50H-146V48Z" fill="#0D0D0D"/>
+    <rect x="-146" y="-146" width="96" height="96" fill="#F1F0EB"/>
+  </g>
+
+  <!-- 03: Abstract author mark. An asymmetric, interlocking ribbon with a carved centre. -->
+  <g transform="translate(1500 380)" fill="#F1F0EB">
+    <path fill-rule="evenodd" d="M-154-150H-36C48-150 112-104 112-18V-2H154V150H36C-48 150-112 104-112 18V2H-154V-150ZM-58-74V-2H-16V18C-16 39-3 54 19 54H58V-54H16V-74H-58ZM-58 74V2H-16V-18C-16-39-3-54 19-54H58V54H16V74H-58Z"/>
+  </g>
+
+  <!-- Vector panel keys: no font glyphs. -->
+  <g fill="#F1F0EB" opacity=".42">
+    <rect x="104" y="624" width="12" height="12"/>
+    <rect x="704" y="624" width="12" height="12"/><rect x="724" y="624" width="12" height="12"/>
+    <rect x="1304" y="624" width="12" height="12"/><rect x="1324" y="624" width="12" height="12"/><rect x="1344" y="624" width="12" height="12"/>
+  </g>
+</svg>

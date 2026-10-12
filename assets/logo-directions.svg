@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="760" viewBox="0 0 1800 760" fill="none">
+  <!-- Three vector-only directions for Hong Jiyoung portfolio identity. -->
+  <rect width="1800" height="760" fill="#0D0D0D"/>
+  <path d="M600 72V688M1200 72V688" stroke="#3A3A38" stroke-width="2"/>
+
+  <!-- 01. Pivot: rebuilt Korean initial ㅈ; decision point moves the last stroke. -->
+  <g transform="translate(300 380)">
+    <path d="M-124-120H124M-124 10H12M12 10V130H124" stroke="#F1F0EB" stroke-width="28" stroke-linecap="square" stroke-linejoin="miter"/>
+    <circle cx="12" cy="10" r="20" fill="#D8F45A"/>
+    <path d="M-148 190H148" stroke="#F1F0EB" stroke-opacity=".18" stroke-width="2"/>
+  </g>
+
+  <!-- 02. Frame: an intentionally open observation frame with one measured point. -->
+  <g transform="translate(900 380)">
+    <path d="M-146-78V-138H-86M86-138H146V-78M146 78V138H86M-86 138H-146V78" stroke="#F1F0EB" stroke-width="24" stroke-linecap="square"/>
+    <path d="M-66 0H22M0-66V66" stroke="#F1F0EB" stroke-width="18" stroke-linecap="square"/>
+    <circle cx="40" cy="0" r="18" fill="#D8F45A"/>
+    <path d="M-148 190H148" stroke="#F1F0EB" stroke-opacity=".18" stroke-width="2"/>
+  </g>
+
+  <!-- 03. Loop: one uninterrupted path joins ㅎ and ㅈ into a responsive flow. -->
+  <g transform="translate(1500 380)">
+    <path d="M-130-74C-130-126-90-154-36-154C18-154 52-121 52-72C52-20 16 12-36 12H-112M-112 12V122H92" stroke="#F1F0EB" stroke-width="27" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M-36-70H72" stroke="#F1F0EB" stroke-width="27" stroke-linecap="round"/>
+    <circle cx="92" cy="122" r="18" fill="#D8F45A"/>
+    <path d="M-148 190H148" stroke="#F1F0EB" stroke-opacity=".18" stroke-width="2"/>
+  </g>
+
+  <!-- Panel keys, drawn as vectors rather than font glyphs. -->
+  <g fill="#F1F0EB" opacity=".55">
+    <rect x="104" y="624" width="12" height="12"/><rect x="124" y="624" width="12" height="12"/><rect x="144" y="624" width="12" height="12"/>
+    <rect x="704" y="624" width="12" height="12"/><rect x="744" y="624" width="12" height="12"/>
+    <rect x="1304" y="624" width="12" height="12"/><rect x="1324" y="624" width="12" height="12"/><rect x="1364" y="624" width="12" height="12"/>
+  </g>
+</svg>
