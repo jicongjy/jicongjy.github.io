@@ -5,7 +5,7 @@
   var el = document.createElement('div');
   el.id = 'loader';
   el.setAttribute('aria-hidden', 'true');
-  el.innerHTML = '<svg viewBox="0 0 40 40"><path class="s p1" pathLength="1" d="M10 7V29"/><path class="s p2" pathLength="1" d="M10 20H30"/><path class="s p3" pathLength="1" d="M30 7V27a7 7 0 0 1-7 7h-3"/><circle class="d" cx="14.5" cy="34.5" r="2.4"/></svg>';
+  el.innerHTML = '<svg  viewBox="0 0 48 48" aria-hidden="true"><rect class="bg" width="48" height="48" rx="10"/><rect class="b1" x="11" y="9" width="8" height="30" rx="1.5"/><rect class="b2" x="29" y="9" width="8" height="30" rx="1.5"/><rect class="b3" x="19" y="21" width="10" height="6"/></svg>';
   document.documentElement.appendChild(el);
   var min = first ? 1700 : 450, t0 = Date.now(), done = false;
   function hide() {

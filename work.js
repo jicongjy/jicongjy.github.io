@@ -78,6 +78,7 @@
     proto: function (b) {
       var icon = '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M17 8v21l-3.6-3.2a3 3 0 0 0-4.3.3 3 3 0 0 0 .3 4.2l10 9.1A9 9 0 0 0 25.4 41H32a8 8 0 0 0 8-8V24a3 3 0 0 0-3-3 3 3 0 0 0-2.6 1.5A3 3 0 0 0 28 21a3 3 0 0 0-2.6 1.5A3 3 0 0 0 23 21V8a3 3 0 0 0-6 0z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M8 8a8 8 0 0 1 8-6M40 8a8 8 0 0 0-8-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" opacity=".6"/></svg>';
       return '<figure class="proto' + (b.phone ? ' phone' : '') + '"><div class="pbar"><span>' + esc(b.title || '프로토타입') + '</span><a href="' + esc(b.src) + '" target="_blank" rel="noreferrer">새 창에서 열기 ↗</a></div>' +
+        '<p class="pguide" hidden><b></b><span></span></p>' +
         '<div class="pwrap"><iframe src="' + esc(b.src) + '" title="' + esc(b.title || '프로토타입') + '" loading="lazy" style="height:' + (b.height || 640) + 'px"></iframe>' +
         (b.autoplay ? '' : '<button class="pdim" type="button" aria-label="프로토타입 사용해 보기"><span class="pic">' + icon + '</span><b>직접 눌러 보세요</b><small>여기를 클릭하면 프로토타입이 열려요</small></button>') + '</div>' +
         (b.caption ? '<figcaption>' + md(b.caption) + '</figcaption>' : '') + '</figure>';
@@ -108,7 +109,7 @@
   }
 
   /* 왼쪽 패널 */
-  var rail = '<a class="wordmark" href="index.html" aria-label="포트폴리오 홈"><svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><path class="s" d="M10 7V29M10 20H30M30 7V27a7 7 0 0 1-7 7h-3"/><circle class="d" cx="14.5" cy="34.5" r="2.4"/></svg></a>' +
+  var rail = '<a class="wordmark" href="index.html" aria-label="포트폴리오 홈"><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect class="bg" width="48" height="48" rx="10"/><rect class="b1" x="11" y="9" width="8" height="30" rx="1.5"/><rect class="b2" x="29" y="9" width="8" height="30" rx="1.5"/><rect class="b3" x="19" y="21" width="10" height="6"/></svg></a>' +
     '<p class="kicker">' + [c.kicker, c.org, c.period].filter(Boolean).map(esc).join(' · ') + '</p>' +
     '<p class="rtitle">' + esc(c.title) + '</p><dl>' +
     '<div><dt>역할</dt><dd>' + chips(c.roles) + '</dd></div>' +
@@ -139,6 +140,23 @@
   document.getElementById('stage').innerHTML = main;
   document.title = c.title + ' | 홍지영';
   var md0 = document.querySelector('meta[name="description"]'); if (md0) md0.setAttribute('content', (c.lede || c.one || c.title).slice(0, 150));
+  window.addEventListener('message', function (e) {
+    if (e.data && e.data.protoGuide) {
+      document.querySelectorAll('.proto').forEach(function (fg) {
+        var f = fg.querySelector('iframe');
+        if (!f || f.contentWindow !== e.source) return;
+        var g = fg.querySelector('.pguide'), d = e.data.protoGuide;
+        g.hidden = false;
+        g.querySelector('b').textContent = '안내 ' + d.step + '/' + d.total;
+        g.querySelector('span').textContent = d.text;
+      });
+      return;
+    }
+    if (!e.data || !e.data.protoHeight) return;
+    document.querySelectorAll('.pwrap iframe').forEach(function (f) {
+      if (f.contentWindow === e.source) f.style.height = Math.ceil(e.data.protoHeight) + 'px';
+    });
+  });
   document.querySelectorAll('.pdim').forEach(function (btn) { btn.addEventListener('click', function () { btn.remove(); }); });
 
 

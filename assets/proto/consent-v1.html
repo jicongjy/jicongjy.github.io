@@ -126,7 +126,7 @@
       .checkbox-icon path { display: none; }
       .checkbox input:checked + .checkbox-icon circle { fill: #333333; stroke: #333333; }
       .checkbox input:checked + .checkbox-icon path { display: block; }
-      .checkbox input:focus-visible + .checkbox-icon { outline: 2px solid #50c879; outline-offset: 2px; border-radius: 50%; }
+      .checkbox input:focus-visible + .checkbox-icon { outline: 2px solid #1a1a1a; outline-offset: 2px; border-radius: 50%; }
 
       .detail-link {
         display: grid;
@@ -189,7 +189,7 @@
         text-decoration: underline;
       }
 
-      .restore-button:focus-visible { outline: 2px solid #50c879; outline-offset: 3px; }
+      .restore-button:focus-visible { outline: 2px solid #1a1a1a; outline-offset: 3px; }
 
       @media (max-width: 420px) {
         main { padding: 40px 16px; }
@@ -197,7 +197,12 @@
         .consent-row label { font-size: 15px; }
       }
     </style>
-  <style>.consent-list{display:none}.all-consent{cursor:default}.all-consent::after{content:"⌄";margin-left:auto;color:#999;font-size:20px;line-height:1}main{min-height:0;padding-bottom:24px}</style></head>
+  <style>.consent-list{display:none}.consent-card.open .consent-list{display:grid}.all-consent{cursor:pointer}.all-consent::after{content:"⌄";margin-left:auto;color:#999;font-size:20px;line-height:1;transition:transform .2s}.consent-card.open .all-consent::after{transform:rotate(180deg)}.notice{display:none!important}main{min-height:0;padding-bottom:24px}
+      @keyframes nudge { 50% { background-color: rgba(216,244,90,.55); } }
+      .nudge { outline: 2px solid #1a1a1a; outline-offset: -2px; border-radius: 8px; animation: nudge 1.2s ease-in-out infinite; }
+      .consent-row.nudge { margin: -4px -8px; padding: 4px 8px; }
+      .restore-button.nudge { padding: 2px 8px; outline: 2px solid #d8f45a; outline-offset: 0; border-radius: 6px; animation: none; background: rgba(216,244,90,.18); }
+</style></head>
   <body>
     <main>
       <h1>이메일로 회원가입</h1>
@@ -219,25 +224,25 @@
 
           <div class="consent-list">
             <div class="consent-row">
-              <span class="checkbox"><input id="agreeAge" type="checkbox" checked /><svg class="checkbox-icon" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8.3"/><path d="M5 9.1 7.6 11.7 13.1 6.2" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span>
+              <span class="checkbox"><input id="agreeAge" type="checkbox" /><svg class="checkbox-icon" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8.3"/><path d="M5 9.1 7.6 11.7 13.1 6.2" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span>
               <label for="agreeAge">(필수) 만 14세 이상입니다.</label>
             </div>
 
             <div class="consent-row">
-              <span class="checkbox"><input id="agreeTerms" type="checkbox" checked /><svg class="checkbox-icon" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8.3"/><path d="M5 9.1 7.6 11.7 13.1 6.2" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span>
+              <span class="checkbox"><input id="agreeTerms" type="checkbox" /><svg class="checkbox-icon" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8.3"/><path d="M5 9.1 7.6 11.7 13.1 6.2" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span>
               <label for="agreeTerms">(필수) 서비스 이용약관 동의</label>
               <a class="detail-link" href="https://flexworkpro.io/legals/terms" target="_blank" rel="noreferrer" aria-label="서비스 이용약관 보기">›</a>
             </div>
 
             <div class="consent-row">
-              <span class="checkbox"><input id="agreePrivacy" type="checkbox" checked /><svg class="checkbox-icon" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8.3"/><path d="M5 9.1 7.6 11.7 13.1 6.2" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span>
+              <span class="checkbox"><input id="agreePrivacy" type="checkbox" /><svg class="checkbox-icon" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8.3"/><path d="M5 9.1 7.6 11.7 13.1 6.2" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span>
               <label for="agreePrivacy">(필수) 개인정보 수집 및 이용 동의</label>
               <a class="detail-link" href="https://flexworkpro.io/legals/privacy" target="_blank" rel="noreferrer" aria-label="개인정보 수집 및 이용 동의 보기">›</a>
             </div>
 
             <div class="consent-group">
               <div class="consent-row">
-                <span class="checkbox"><input id="agreeNews" type="checkbox" checked /><svg class="checkbox-icon" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8.3"/><path d="M5 9.1 7.6 11.7 13.1 6.2" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span>
+                <span class="checkbox"><input id="agreeNews" type="checkbox" /><svg class="checkbox-icon" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8.3"/><path d="M5 9.1 7.6 11.7 13.1 6.2" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/></svg></span>
                 <label for="agreeNews"><span class="optional">(선택)</span> 채용 소식 · 커뮤니티 · 커리어 콘텐츠 · 뉴스레터 등 맞춤 정보 수신</label>
               </div>
               <div id="newsNotice" class="notice" hidden>
@@ -266,21 +271,17 @@
     <script>
       const consentIds = ["agreeAge", "agreeTerms", "agreePrivacy", "agreeNews", "agreePosition"];
       const allConsent = document.querySelector("#agreeAll");
+      const card = document.querySelector(".consent-card");
+      const el = (id) => document.querySelector(`#${id}`);
 
-      function syncAllConsent() {
-        const checkboxes = consentIds.map((id) => document.querySelector(`#${id}`));
-        allConsent.checked = checkboxes.every((checkbox) => checkbox.checked);
-        allConsent.indeterminate = !allConsent.checked && checkboxes.some((checkbox) => checkbox.checked);
-      }
-
-      function syncNotices() {
-        document.querySelector("#newsNotice").hidden = document.querySelector("#agreeNews").checked;
-        document.querySelector("#positionNotice").hidden = document.querySelector("#agreePosition").checked;
-      }
-
-      function syncInterface() {
-        syncAllConsent();
-        syncNotices();
+      function sync() {
+        const boxes = consentIds.map(el);
+        allConsent.checked = boxes.every((b) => b.checked);
+        allConsent.indeterminate = !allConsent.checked && boxes.some((b) => b.checked);
+        card.classList.toggle("open", boxes.some((b) => b.checked));
+        document.querySelector(".all-consent").classList.toggle("nudge", !card.classList.contains("open"));
+        const open = card.classList.contains("open");
+        parent.postMessage({ protoGuide: { step: open ? 2 : 1, total: 2, text: open ? "전체 항목이 펼쳐졌어요. 다시 누르면 접혀요" : "'전체 동의'를 눌러 보세요" } }, "*");
       }
 
       document.querySelectorAll(".checkbox-icon").forEach((icon) => {
@@ -290,21 +291,16 @@
           checkbox.dispatchEvent(new Event("change", { bubbles: true }));
         });
       });
-
       allConsent.addEventListener("change", () => {
-        consentIds.forEach((id) => { document.querySelector(`#${id}`).checked = allConsent.checked; });
-        syncInterface();
+        consentIds.forEach((id) => { el(id).checked = allConsent.checked; });
+        sync();
       });
+      consentIds.forEach((id) => el(id).addEventListener("change", sync));
+      sync();
 
-      consentIds.forEach((id) => document.querySelector(`#${id}`).addEventListener("change", syncInterface));
-      document.querySelectorAll("[data-restore]").forEach((button) => {
-        button.addEventListener("click", () => {
-          document.querySelector(`#${button.dataset.restore}`).checked = true;
-          syncInterface();
-        });
-      });
-
-      syncInterface();
+      function reportHeight() { parent.postMessage({ protoHeight: document.documentElement.scrollHeight }, '*'); }
+      new ResizeObserver(reportHeight).observe(document.body);
+      window.addEventListener('load', reportHeight);
     </script>
   </body>
 </html>

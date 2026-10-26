@@ -43,7 +43,6 @@
  .activity-grid article{min-height:0}
 }
 
-.mark{width:34px;height:34px}
 .tool-groups{display:grid;gap:14px;margin-top:14px}
 .tool-groups div{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .tool-groups b{width:64px;color:var(--muted);font-size:14px;font-weight:520}
