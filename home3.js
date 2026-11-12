@@ -91,63 +91,6 @@ var PJ = {
   });
 })();
 
-// 작업 보기 방식: 목록(기본)과 격자
-(function () {
-  var btns = [].slice.call(document.querySelectorAll('.vtb'));
-  var list = document.getElementById('view-list'), grid = document.getElementById('view-grid');
-  if (!btns.length || !list || !grid) return;
-  btns.forEach(function (b) {
-    b.addEventListener('click', function () {
-      var v = b.getAttribute('data-view');
-      list.hidden = v !== 'list';
-      grid.hidden = v !== 'grid';
-      btns.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
-    });
-  });
-})();
-
-// 목록의 행에 마우스를 올리면 커서를 따라다니는 미리보기 카드가 나온다(마우스가 있는 화면만)
-(function () {
-  if (!(window.matchMedia && window.matchMedia('(hover: hover)').matches)) return;
-  var pv = document.querySelector('.pv'), table = document.getElementById('view-list');
-  if (!pv || !table) return;
-  var img = pv.querySelector('img'), res = pv.querySelector('.pv-r'), box = pv.querySelector('.pv-i');
-  var x = 0, y = 0, tx = 0, ty = 0, raf = 0;
-  function srcOf(r) {
-    var t = document.querySelector('#view-grid [data-pid="' + r.getAttribute('data-pid') + '"] img');
-    return t ? (t.currentSrc || t.src) : '';
-  }
-  function place() {
-    raf = 0;
-    var w = pv.offsetWidth, h = pv.offsetHeight;
-    var px = Math.min(Math.max(12, tx - w / 2), window.innerWidth - w - 12);
-    var py = Math.min(Math.max(12, ty - h / 2), window.innerHeight - h - 12);
-    pv.style.transform = 'translate3d(' + px + 'px,' + py + 'px,0)';
-  }
-  function schedule() { if (!raf) raf = requestAnimationFrame(place); }
-  table.addEventListener('mousemove', function (e) { tx = e.clientX; ty = e.clientY; schedule(); });
-  [].slice.call(table.querySelectorAll('.prow')).forEach(function (r) {
-    r.addEventListener('mouseenter', function (e) {
-      img.src = srcOf(r);
-      img.alt = '';
-      res.textContent = r.getAttribute('data-res');
-      box.style.setProperty('--pc', getComputedStyle(r).getPropertyValue('--oc'));
-      tx = e.clientX; ty = e.clientY; schedule();
-      pv.classList.add('on');
-    });
-  });
-  table.addEventListener('mouseleave', function () { pv.classList.remove('on'); });
-  [].slice.call(table.querySelectorAll('.prow')).forEach(function (r) {
-    r.addEventListener('focus', function () {
-      var b = r.getBoundingClientRect();
-      img.src = srcOf(r); res.textContent = r.getAttribute('data-res');
-      box.style.setProperty('--pc', getComputedStyle(r).getPropertyValue('--oc'));
-      tx = b.left + b.width * 0.55; ty = b.top; schedule(); pv.classList.add('on');
-    });
-    r.addEventListener('blur', function () { pv.classList.remove('on'); });
-  });
-})();
-
 // 떠 있는 목차: 표지를 지나면 나타나고, 지금 보고 있는 섹션을 표시한다
 (function () {
   var dock = document.querySelector('.dock');
