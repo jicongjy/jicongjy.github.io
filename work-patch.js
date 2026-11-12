@@ -1,6 +1,7 @@
 /* 상세별 시각화 보정. 데이터 파일은 건드리지 않고 화면에 그리기 직전에 바꾼다. */
 window.PATCH = {
   consent: function (c) {
+    c.title = '가입 화면 마케팅 수신 동의 개선';
     var s = c.sections;
     s[0].blocks = [{ type: 'split', title: '가입한 사람 100% 중 수신에 동의한 비율 (개편 전 14일)', items: [{ l: '마케팅 수신', v: 19.7 }, { l: '채용 추천 수신', v: 24.2 }], note: '동의하지 않으면 맞춤 포지션 추천이 멈춰요' }];
     (s[1].blocks || []).forEach(function (b) { if (b.type === 'flow') b.steps[2].on = true; });
