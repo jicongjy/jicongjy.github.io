@@ -147,7 +147,7 @@
   }
 
   document.getElementById('app').innerHTML =
-    '<nav class="nav" aria-label="섹션 이동"><a href="index.html#work" class="on">작업</a><a href="index.html#career">이력</a><a href="index.html#tools">도구</a><a href="index.html#others">수상·배움</a><a href="index.html#contact">문의</a></nav>' +
+    '<header class="gh"><a class="gh-b" href="index.html">홍지영</a><nav class="gh-m" aria-label="섹션 이동"><a href="index.html#work" class="on">작업</a><a href="index.html#career">이력</a><a href="index.html#tools">도구</a><a href="index.html#others">수상·배움</a></nav><a class="gh-c" href="index.html#contact">문의</a></header>' +
     '<div class="page"><aside class="side">' + side + '</aside><main class="main">' + main + '</main></div>' +
     '<footer class="foot"><b>홍지영</b><span>프로덕트 디자이너</span><a href="index.html">포트폴리오 홈</a></footer>';
 

@@ -161,3 +161,20 @@ var PJ = {
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') PJ.clear(); });
 })();
+
+// 상단 헤더 메뉴: 지금 보고 있는 섹션을 검정으로 표시
+(function () {
+  var links = [].slice.call(document.querySelectorAll('.gh-m a'));
+  if (!links.length) return;
+  var ids = links.map(function (a) { return a.getAttribute('href').slice(1); });
+  var ticking = false;
+  function update() {
+    ticking = false;
+    var y = window.scrollY + 140, cur = '';
+    ids.forEach(function (id) { var el = document.getElementById(id); if (el && el.getBoundingClientRect().top + window.scrollY <= y) cur = id; });
+    links.forEach(function (a) { var on = a.getAttribute('href') === '#' + cur; a.classList.toggle('on', on); if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+  }
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+})();
