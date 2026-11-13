@@ -3,35 +3,59 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>페이지를 찾을 수 없습니다 | 홍지영</title>
-<meta name="description" content="프로덕트 디자이너 홍지영의 포트폴리오" />
+<title>아무것도 없음</title>
 <meta name="robots" content="noindex" />
-<link rel="preconnect" href="https://cdn.jsdelivr.net" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
-<link rel="icon" href="portfolio/favicon.svg" type="image/svg+xml" />
-<link rel="icon" href="portfolio/favicon-32.png" sizes="32x32" type="image/png" />
-<link rel="apple-touch-icon" href="portfolio/apple-touch-icon.png" />
+<link rel="icon" href="/portfolio/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/portfolio/favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="/portfolio/apple-touch-icon.png" />
 <style>
 :root{--ink:#0a0a0a;--muted:#6b6b6b;--bg:#f6f6f4;color-scheme:light}
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;word-break:keep-all;-webkit-font-smoothing:antialiased;padding:0 max(12px,env(safe-area-inset-right,0px)) 0 max(12px,env(safe-area-inset-left,0px))}
-main{min-height:100%;display:flex;flex-direction:column;justify-content:center;gap:28px;padding:48px 0}
-.nm{margin:0;font-size:20px;font-weight:700;letter-spacing:-.03em}
-h1{margin:0;max-width:16em;font-size:clamp(30px,4.6vw,64px);line-height:1.25;font-weight:600;letter-spacing:-.04em;text-wrap:balance}
-p{margin:0;font-size:17px;line-height:1.7;color:var(--muted)}
-a.go{align-self:flex-start;display:inline-flex;align-items:center;gap:12px;padding:15px 22px 16px;background:var(--ink);color:#fff;font-size:17px;font-weight:600;line-height:1.2;text-decoration:none;box-shadow:inset 0 0 0 1px var(--ink);transition:background-color .15s ease,color .15s ease}
-a.go:hover,a.go:focus-visible{background:var(--bg);color:var(--ink);outline:none}
-code{font:inherit;color:var(--ink);font-weight:600}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;word-break:keep-all;-webkit-font-smoothing:antialiased;padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));overflow:hidden}
+main{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;padding:48px 0;text-align:center}
+h1{margin:0;font-size:clamp(34px,6vw,84px);line-height:1.2;font-weight:600;letter-spacing:-.045em;text-wrap:balance}
+.eyes{display:flex;gap:clamp(12px,2vw,24px);cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
+.eye{position:relative;width:clamp(84px,12vw,148px);height:clamp(84px,12vw,148px);border-radius:50%;background:#fff;box-shadow:inset 0 0 0 3px var(--ink);overflow:hidden;transition:transform .12s ease}
+.eye i{position:absolute;left:50%;top:50%;width:38%;height:38%;margin:-19% 0 0 -19%;border-radius:50%;background:var(--ink);will-change:transform}
+.eyes.blink .eye{transform:scaleY(.08)}
+.cap{margin:0;min-height:1.7em;font-size:17px;line-height:1.7;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.eye{transition:none}}
 </style>
 </head>
 <body>
 <main>
-<p class="nm">홍지영</p>
-<h1>찾으시는 페이지가 없습니다</h1>
-<p>주소가 바뀌었거나 없어진 페이지입니다. 포트폴리오는 아래에서 보실 수 있습니다.</p>
-<a class="go" href="/portfolio/">포트폴리오 보러 가기 <span aria-hidden="true">→</span></a>
+  <h1>여기엔<br>아무것도 없어요</h1>
+  <div class="eyes" id="eyes" role="button" tabindex="0" aria-label="눈을 눌러 보세요"><span class="eye"><i></i></span><span class="eye"><i></i></span></div>
+  <p class="cap" id="cap" aria-live="polite">정말이에요. 구석구석 찾아봤는데 먼지뿐이었어요.</p>
 </main>
+<script>
+(function () {
+  var eyes = document.getElementById('eyes'), cap = document.getElementById('cap');
+  var pupils = [].slice.call(eyes.querySelectorAll('i')), eyeEls = [].slice.call(eyes.querySelectorAll('.eye'));
+  function look(x, y) {
+    pupils.forEach(function (p, i) {
+      var r = eyeEls[i].getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      var dx = x - cx, dy = y - cy, d = Math.sqrt(dx * dx + dy * dy) || 1, max = r.width * 0.2, k = Math.min(max, d) / d;
+      p.style.transform = 'translate(' + (dx * k).toFixed(1) + 'px,' + (dy * k).toFixed(1) + 'px)';
+    });
+  }
+  window.addEventListener('pointermove', function (e) { look(e.clientX, e.clientY); }, { passive: true });
+  window.addEventListener('touchstart', function (e) { var t = e.touches[0]; if (t) look(t.clientX, t.clientY); }, { passive: true });
+  var lines = ['아무것도 없다니까요.', '진짜예요. 믿어 주세요.', '그래도 눈은 마주쳤네요.', '자꾸 누르면 어지러워요.', '...', '여기까지 오신 건 대단한데, 정말 없어요.', '커피나 한잔 하고 오세요.'];
+  var n = 0;
+  function poke() {
+    eyes.classList.add('blink');
+    setTimeout(function () { eyes.classList.remove('blink'); }, 140);
+    cap.textContent = lines[n++ % lines.length];
+  }
+  eyes.addEventListener('click', poke);
+  eyes.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); poke(); } });
+  var t = 0;
+  (function idle() { if (!window.__moved) look(innerWidth / 2 + Math.sin(t) * 120, innerHeight / 2 + 160); t += 0.02; });
+  look(innerWidth / 2, innerHeight / 2 + 200);
+})();
+</script>
 </body>
 </html>
