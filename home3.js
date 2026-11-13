@@ -172,6 +172,8 @@ var PJ = {
     ticking = false;
     var y = window.scrollY + 140, cur = '';
     ids.forEach(function (id) { var el = document.getElementById(id); if (el && el.getBoundingClientRect().top + window.scrollY <= y) cur = id; });
+    var gh = document.querySelector('.gh'), cv = document.querySelector('.cover');
+    if (gh && cv) gh.classList.toggle('show', window.scrollY > cv.offsetHeight - 120);
     links.forEach(function (a) { var on = a.getAttribute('href') === '#' + cur; a.classList.toggle('on', on); if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
   }
   window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
