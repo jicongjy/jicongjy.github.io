@@ -747,3 +747,6 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .gh-c:hover,.gh-c:focus-visible{text-decoration:underline;text-underline-offset:5px;outline:none}
 @media (max-width:560px){.gh{grid-template-columns:auto 1fr auto;column-gap:10px}.gh-b{font-size:18px}.gh-m{gap:14px;font-size:15px;justify-content:center}.gh-c{font-size:15px}}
 .sec,.foot,.work{scroll-margin-top:56px}
+
+/* 표지 문장: 의미 단위 줄바꿈(데스크톱만). 좁은 화면에서는 자연스럽게 줄바꿈 */
+@media (max-width:899px){.panel .s br.ln{display:none}}
