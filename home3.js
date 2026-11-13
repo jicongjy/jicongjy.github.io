@@ -180,3 +180,28 @@ var PJ = {
   window.addEventListener('resize', update);
   update();
 })();
+
+// 이력의 "작업 N건"을 누르면 그 회사에서 한 작업에 이름표가 붙고 작업 영역으로 이동한다.
+(function () {
+  var btns = [].slice.call(document.querySelectorAll('button.cwb'));
+  if (!btns.length) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var ids = (b.getAttribute('data-projects') || '').split(',').filter(Boolean);
+      PJ.clear();
+      var first = null;
+      ids.forEach(function (id) {
+        PJ.mark(id, b.getAttribute('data-label'));
+        var c = PJ.visible(id);
+        if (c && (!first || c.getBoundingClientRect().top < first.getBoundingClientRect().top)) first = c;
+      });
+      var work = document.getElementById('work');
+      var target = ids.length > 3 ? work : first;
+      if (target) {
+        var y = target.getBoundingClientRect().top + window.scrollY - (ids.length > 3 ? 0 : 140);
+        window.scrollTo({ top: Math.max(0, y), behavior: reduce ? 'auto' : 'smooth' });
+      }
+    });
+  });
+})();

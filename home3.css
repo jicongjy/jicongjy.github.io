@@ -755,3 +755,43 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .js .gh{transition:transform .3s ease,visibility 0s linear 0s}
 .js .gh:not(.show){transform:translateY(-100%);visibility:hidden;transition:transform .3s ease,visibility 0s linear .3s}
 @media (prefers-reduced-motion:reduce){.js .gh{transition:none!important}}
+
+/* ===== 이력: 위에 경력 흐름 막대, 아래에 한 줄씩 목록 ===== */
+.cbar{margin:0 0 56px}
+.cl2{display:grid;grid-template-columns:96px minmax(0,1fr);column-gap:16px;align-items:center}
+.cl2+.cl2{margin-top:8px}
+.cln{font-size:var(--t-small);color:var(--c-muted)}
+.ctr{position:relative;height:44px}
+.cl2.ax .ctr{height:28px;margin-top:2px}
+.cs{position:absolute;left:var(--l);width:var(--w);top:0;bottom:0;display:flex;align-items:center;padding:0 10px;overflow:hidden;font-size:var(--t-small);font-weight:600;line-height:1;white-space:nowrap;text-decoration:none;box-shadow:0 0 0 1px var(--bg)}
+.cs span{overflow:hidden;text-overflow:clip}
+.cs.k{background:#101010;color:#fff}
+.cs.g{background:#d8d8d3;color:var(--c-ink)}
+.cs:hover,.cs:focus-visible{outline:none;background:var(--c-ink);color:#fff}
+.cl2.ax i{position:absolute;left:var(--l);top:0;bottom:0;border-left:1px solid #c9c9c4}
+.cl2.ax i b{position:absolute;left:6px;top:4px;font-size:var(--t-small);font-weight:400;color:var(--c-muted)}
+.cl{list-style:none;margin:0;padding:0;border-bottom:1px solid #d0d0cb}
+.cr{display:grid;grid-template-columns:minmax(0,1.15fr) 168px minmax(0,1.5fr) 112px;column-gap:28px;align-items:start;padding:26px 0 28px;border-top:1px solid #d0d0cb;scroll-margin-top:80px}
+.cn h3{margin:0;font-size:var(--t-title);font-weight:var(--w-strong);letter-spacing:-.02em;line-height:1.35;color:var(--c-ink)}
+.cn p{margin:4px 0 0;font-size:var(--t-body);line-height:1.5}
+.cn .ro{color:var(--c-ink)}
+.cn .no{font-size:var(--t-small);color:var(--c-muted)}
+.cp{margin:3px 0 0;font-size:var(--t-body);line-height:1.5;color:var(--c-ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.cd{margin:3px 0 0;font-size:var(--t-body);line-height:1.6;color:var(--c-body)}
+.cw{justify-self:end;padding-top:3px}
+.cwb{display:inline-block;padding:0;border:0;background:none;font:inherit;font-size:var(--t-small);font-weight:600;line-height:1.4;color:var(--c-ink);text-decoration:underline;text-decoration-color:#bdbdb9;text-underline-offset:4px;cursor:pointer;white-space:nowrap}
+.cwb:hover,.cwb:focus-visible{text-decoration-color:var(--c-ink);outline:none}
+.cr:target{background:#ecece8}
+@media (max-width:1100px){.cr{grid-template-columns:minmax(0,1fr) 150px minmax(0,1.2fr);}.cw{grid-column:1/-1;justify-self:start;padding-top:0}}
+@media (max-width:899px){
+  .cl2{grid-template-columns:minmax(0,1fr);row-gap:4px}
+  .cl2.ax .cln{display:none}
+  .cs span{display:none}
+  .cr{grid-template-columns:minmax(0,1fr);row-gap:6px;padding:22px 0 24px}
+  .cp{order:-1;margin:0;color:var(--c-muted)}
+  .cw{grid-column:auto}
+}
+.cs.out{overflow:visible}
+.cs.out span{position:absolute;right:100%;margin-right:10px;color:var(--c-ink)}
+.cl2.ax i{font-style:normal}
+@media (max-width:899px){.cs.out span{display:none}}
