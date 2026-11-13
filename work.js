@@ -115,7 +115,7 @@
 
   /* 왼쪽 열 */
   var tags = [c.kicker, c.org].filter(Boolean);
-  var side = '<a class="back" href="index.html#work"><span class="ar" aria-hidden="true">←</span>작업 목록</a>' +
+  var side = '<a class="back" href="index.html#work" aria-label="작업 목록으로" title="작업 목록">←</a>' +
     '<ul class="tags">' + lis(tags, function (i) { return i ? 'o' : ''; }) + '</ul>' +
     (c.lede ? '<p class="lede">' + md(c.lede) + '</p>' : '') +
     '<dl class="key"><dt>핵심 결과</dt><dd>' + md(c.result.main) + (c.result.sub ? '<small>' + md(c.result.sub) + '</small>' : '') + '</dd></dl>' +
