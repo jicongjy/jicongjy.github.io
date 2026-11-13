@@ -30,7 +30,19 @@ main{position:relative;z-index:1}
 .eyes:not(.poked) .eye{animation:nudge 4.2s ease-in-out 1.6s infinite}
 .eyes:not(.poked) .eye+.eye{animation-delay:1.7s}
 .cap{margin:0;min-height:1.7em;font-size:17px;line-height:1.7;color:var(--muted)}
-@media (prefers-reduced-motion:reduce){.eye{transition:none}.eyes:not(.poked) .eye{animation:none}.tip{transition:none}}
+/* 어지러운 상태: 눈이 소용돌이로 바뀌고, 배경이 최면처럼 돈다 */
+body::before{content:"";position:fixed;inset:-70%;z-index:-2;pointer-events:none;opacity:0;transition:opacity .5s ease;background:repeating-conic-gradient(from 0deg,#0a0a0a 0 9deg,#f6f6f4 9deg 18deg)}
+body.dizzy::before{opacity:1;animation:swirl 2.4s linear infinite}
+body.dizzy .code{opacity:0}
+.code{transition:opacity .4s ease}
+body.dizzy h1,body.dizzy .cap{background:rgba(246,246,244,.94);padding:.08em .5em;border-radius:14px}
+body.dizzy .eyes{pointer-events:none;cursor:not-allowed;animation:wobble .55s ease-in-out infinite}
+body.dizzy .eye i{width:100%;height:100%;left:0;top:0;margin:0;border-radius:50%;background:repeating-radial-gradient(circle at 50% 50%,#0a0a0a 0 4px,#fff 4px 9px),repeating-conic-gradient(#0a0a0a 0 20deg,#fff 20deg 40deg);background-blend-mode:difference;animation:spin .7s linear infinite}
+body.dizzy .eye+.eye i{animation-direction:reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes swirl{0%{transform:rotate(0) scale(1)}50%{transform:rotate(180deg) scale(1.25)}100%{transform:rotate(360deg) scale(1)}}
+@keyframes wobble{0%,100%{transform:rotate(-6deg) translateY(0)}50%{transform:rotate(6deg) translateY(-6px)}}
+@media (prefers-reduced-motion:reduce){.eye{transition:none}.eyes:not(.poked) .eye{animation:none}.tip{transition:none}body.dizzy::before,body.dizzy .eye i,body.dizzy .eyes{animation:none}}
 </style>
 </head>
 <body>
@@ -54,12 +66,28 @@ main{position:relative;z-index:1}
   }
   window.addEventListener('pointermove', function (e) { look(e.clientX, e.clientY); }, { passive: true });
   window.addEventListener('touchstart', function (e) { var t = e.touches[0]; if (t) look(t.clientX, t.clientY); }, { passive: true });
-  var lines = ['아무것도 없다니까요.', '진짜예요. 믿어 주세요.', '그래도 눈은 마주쳤네요.', '자꾸 누르면 어지러워요.', '...', '여기까지 오신 건 대단한데, 정말 없어요.', '커피나 한잔 하고 오세요.'];
-  var n = 0;
+  var lines = ['아무것도 없다니까요.', '진짜예요. 믿어 주세요.', '그래도 눈은 마주쳤네요.', '자꾸 누르면 어지러워요.', '', '여기까지 오신 건 대단한데, 정말 없어요.', '커피나 한잔 하고 오세요.'];
+  var backLines = ['휴… 이제 좀 괜찮아요. 그래도 살살 눌러 주세요.', '아직 머리가 핑 돌아요. 정말로 아무것도 없다니까요.', '돌아왔어요! 다음엔 천천히 부탁드려요.'];
+  var n = 0, bn = 0, locked = false;
+  function dizzy() {
+    locked = true;
+    document.body.classList.add('dizzy');
+    cap.textContent = '으으… 세상이 빙글빙글…';
+    tip.textContent = '어지러워…'; tip.classList.add('hot');
+    setTimeout(function () {
+      document.body.classList.remove('dizzy');
+      locked = false;
+      cap.textContent = backLines[bn++ % backLines.length];
+      tip.textContent = '눌러 봐'; tip.classList.remove('hot');
+    }, 3400);
+  }
   function poke() {
+    if (locked) return;
     eyes.classList.add('blink');
     setTimeout(function () { eyes.classList.remove('blink'); }, 140);
-    cap.textContent = lines[n++ % lines.length];
+    var i = n++ % lines.length;
+    if (i === 4) { dizzy(); return; }
+    cap.textContent = lines[i];
   }
   var tip = document.getElementById('tip'), tx = 0, ty = 0, cx = 0, cy = 0, seen = false, busy = false, pokes = 0;
   function frame() {
@@ -78,7 +106,7 @@ main{position:relative;z-index:1}
   eyes.addEventListener('pointerleave', function () { if (!busy) { say('눌러 봐'); tip.classList.remove('hot'); } });
   eyes.addEventListener('click', function () {
     pokes++; eyes.classList.add('poked'); busy = true; say('아야!'); tip.classList.add('hot');
-    setTimeout(function () { busy = false; say(eyes.matches(':hover') ? '또 눌러 봐' : '눌러 봐'); if (!eyes.matches(':hover')) tip.classList.remove('hot'); }, 650);
+    setTimeout(function () { busy = false; if (locked) return; say(eyes.matches(':hover') ? '또 눌러 봐' : '눌러 봐'); if (!eyes.matches(':hover')) tip.classList.remove('hot'); }, 650);
   });
   eyes.addEventListener('click', poke);
   eyes.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); poke(); } });
