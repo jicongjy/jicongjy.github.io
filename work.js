@@ -14,7 +14,7 @@
 
   function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function md(s) { return esc(s).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/&lt;(\/?)i&gt;/g, '<$1i>'); }
-  function lis(a) { return (a || []).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join(''); }
+  function lis(a, cls) { return (a || []).map(function (t, i) { return '<li' + (cls && cls(i) ? ' class="' + cls(i) + '"' : '') + '>' + esc(t) + '</li>'; }).join(''); }
   function panel(title, body) { return '<div class="panel">' + (title ? '<h3>' + esc(title) + '</h3>' : '') + body + '</div>'; }
 
   function figure(f) {
@@ -116,21 +116,21 @@
   /* 왼쪽 열 */
   var tags = [c.kicker, c.org].filter(Boolean);
   var side = '<a class="back" href="index.html#work"><span class="ar" aria-hidden="true">←</span>작업 목록</a>' +
-    '<ul class="tags">' + lis(tags) + '</ul>' +
-    (c.lede ? '<p class="lede">' + md(c.lede) + '</p>' : '') +
+    '<ul class="tags">' + lis(tags, function (i) { return i ? 'o' : ''; }) + '</ul>' +
     '<dl class="key"><dt>핵심 결과</dt><dd>' + md(c.result.main) + (c.result.sub ? '<small>' + md(c.result.sub) + '</small>' : '') + '</dd></dl>' +
     (c.live ? '<a class="live" href="' + esc(c.live) + '" target="_blank" rel="noreferrer">운영 사이트 보기 ↗</a>' : '');
 
   /* 담당 정보 */
-  var meta = '<dl class="meta' + (ex.share ? '' : ' ns') + '">' +
-    '<div class="mc"><dt>역할</dt><dd><ul class="pl">' + lis(c.roles) + '</ul></dd></div>' +
-    (ex.share ? '<div class="mc"><dt>기여도</dt><dd><span class="share">' + esc(ex.share) + '</span></dd></div>' : '') +
-    '<div class="mc"><dt>도구</dt><dd><ul class="pl">' + lis(c.tools) + '</ul></dd></div>' +
-    '<div class="mc"><dt>기간</dt><dd>' + esc(c.period) + '</dd></div>' +
-    (c.domains && c.domains.length ? '<div class="mc w2"><dt>경험한 기능</dt><dd><ul class="pl">' + lis(c.domains) + '</ul></dd></div>' : '') +
-    (c.team && c.team.length ? '<div class="mc w2"><dt>팀 구성</dt><dd><ul class="pl">' + lis(c.team) + '</ul></dd></div>' : '') + '</dl>';
+  var meta = '<header class="hd"><h1>' + (c.tone === 'client' ? esc(c.title) : md(c.headline)) + '</h1><div class="hr"><dl class="hm">' +
+    '<div><dt>역할</dt><dd><ul class="pl">' + lis(c.roles) + '</ul></dd></div>' +
+    '<div><dt>도구</dt><dd><ul class="pl o">' + lis(c.tools) + '</ul></dd></div>' +
+    '<div><dt>기간</dt><dd>' + esc(c.period) + '</dd></div>' +
+    (ex.share ? '<div><dt>기여도</dt><dd><span class="share">' + esc(ex.share) + '</span></dd></div>' : '') +
+    (c.domains && c.domains.length ? '<div class="w2"><dt>경험한 기능</dt><dd><ul class="pl o">' + lis(c.domains) + '</ul></dd></div>' : '') +
+    (c.team && c.team.length ? '<div class="w2"><dt>팀 구성</dt><dd><ul class="pl o">' + lis(c.team) + '</ul></dd></div>' : '') + '</dl>' +
+    (c.lede ? '<p class="lede">' + md(c.lede) + '</p>' : '') + '</div></header>';
 
-  var hero = ex.img ? '<div class="hero" style="--project:' + esc(ex.color) + '"><img src="' + esc(ex.img) + '" alt="' + esc(c.title) + ' 대표 화면" /></div>' : '';
+  var hero = ex.img ? '<div class="hero"><img src="' + esc(ex.img) + '" alt="' + esc(c.title) + ' 대표 화면" /></div>' : '';
 
   function nav() {
     return '<nav class="next" aria-label="다른 프로젝트"><a href="work.html?id=' + prev.slug + '"><small>← 이전 프로젝트</small><b>' + esc(prev.title) + '</b></a><a href="work.html?id=' + next.slug + '"><small>다음 프로젝트 →</small><b>' + esc(next.title) + '</b></a></nav>';
@@ -138,10 +138,10 @@
 
   var main;
   if (c.tone === 'client') {
-    main = '<h1>' + esc(c.title) + '</h1>' + meta + '<div class="shots">' + c.shots.map(figure).join('') + '</div><p class="one">' + md(c.one) + '</p>' + nav();
+    main = meta + '<div class="shots">' + c.shots.map(figure).join('') + '</div><p class="one">' + md(c.one) + '</p>' + nav();
     side = side.replace(/<dl class="key">.*?<\/dl>/, '<dl class="key"><dt>핵심 결과</dt><dd>' + md(c.result.main) + '</dd></dl>');
   } else {
-    main = '<h1>' + md(c.headline) + '</h1>' + meta + hero +
+    main = meta + hero +
       '<div class="summary">' + c.summary.map(function (s) { return '<div><b>' + esc(s[0]) + '</b><p>' + md(s[1]) + '</p></div>'; }).join('') + '</div>' +
       (c.sideNote ? '<p class="side-note">' + md(c.sideNote) + '</p>' : '') + c.sections.map(section).join('') + nav();
   }
