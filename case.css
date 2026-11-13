@@ -48,8 +48,12 @@ h1{margin:0;font-size:clamp(30px,3.5vw,54px);line-height:1.25;font-weight:600;le
 .hm .share{font-size:var(--t-title);letter-spacing:-.02em}
 .hd .lede{margin:0;font-size:var(--t-body);line-height:1.75;color:var(--body)}
 .hd .lede::before{content:"소개";display:block;margin-bottom:8px;font-size:var(--t-small);color:var(--muted)}
-.meta{display:grid;grid-template-columns:1.75fr .75fr 1.2fr 1fr;gap:8px;margin:28px 0 8px}
-.meta.ns{grid-template-columns:1.75fr 1.2fr 1fr}
+/* 담당 정보 */
+.props{margin:28px 0 8px;border-bottom:1px solid var(--hair2)}
+.pr{display:grid;grid-template-columns:132px minmax(0,1fr);column-gap:16px;padding:13px 0;border-top:1px solid var(--hair2)}
+.pr dt{margin:0;padding-top:2px;font-size:var(--t-small);color:var(--muted);line-height:1.6}
+.pr dd{margin:0;display:flex;flex-wrap:wrap;font-weight:500;line-height:1.65}
+.pr dd span+span::before{content:"·";margin:0 .6em;color:var(--gray);font-weight:400}
 .mc{min-width:0;padding:16px 18px 18px;background:var(--soft);border-top:2px solid var(--ink)}
 .mc.w2{grid-column:span 2}
 .mc dt{margin:0 0 10px;font-size:var(--t-small);color:var(--muted);line-height:1.3}
@@ -230,7 +234,6 @@ h1{margin:0;font-size:clamp(30px,3.5vw,54px);line-height:1.25;font-weight:600;le
 @media (max-width:1000px){
   .page{grid-template-columns:minmax(0,1fr);row-gap:36px}
   .side{position:static;padding-bottom:0}
-  .meta{grid-template-columns:repeat(2,minmax(0,1fr))}
   .summary,.cols2,.roles,.gallery{grid-template-columns:minmax(0,1fr)}
   .step:not(:last-child)::after{right:auto;left:50%;top:auto;bottom:-17px;transform:translateX(-50%) rotate(90deg)}
   .next{grid-template-columns:minmax(0,1fr)}
@@ -244,6 +247,6 @@ h1{margin:0;font-size:clamp(30px,3.5vw,54px);line-height:1.25;font-weight:600;le
   .bar b{text-align:left}
   .timeline .item{grid-template-columns:minmax(0,1fr);gap:4px}
 }
-@media (max-width:560px){.meta,.meta.ns{grid-template-columns:minmax(0,1fr)}.mc.w2{grid-column:auto}}
+@media (max-width:560px){.pr{grid-template-columns:minmax(0,1fr);row-gap:2px}}
 @media (max-width:420px){.mc.w2{grid-column:auto}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}

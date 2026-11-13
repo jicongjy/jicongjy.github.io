@@ -121,14 +121,12 @@
     '<dl class="key"><dt>핵심 결과</dt><dd>' + md(c.result.main) + (c.result.sub ? '<small>' + md(c.result.sub) + '</small>' : '') + '</dd></dl>' +
     (c.live ? '<a class="live" href="' + esc(c.live) + '" target="_blank" rel="noreferrer">운영 사이트 보기 ↗</a>' : '');
 
-  /* 담당 정보 */
-  var meta = '<dl class="meta' + (ex.share ? '' : ' ns') + '">' +
-    '<div class="mc"><dt>역할</dt><dd><ul class="pl">' + lis(c.roles) + '</ul></dd></div>' +
-    (ex.share ? '<div class="mc"><dt>기여도</dt><dd><span class="share">' + esc(ex.share) + '</span></dd></div>' : '') +
-    '<div class="mc"><dt>도구</dt><dd><ul class="pl o">' + lis(c.tools) + '</ul></dd></div>' +
-    '<div class="mc"><dt>기간</dt><dd>' + esc(c.period) + '</dd></div>' +
-    (c.domains && c.domains.length ? '<div class="mc w2"><dt>경험한 기능</dt><dd><ul class="pl o">' + lis(c.domains) + '</ul></dd></div>' : '') +
-    (c.team && c.team.length ? '<div class="mc w2"><dt>팀 구성</dt><dd><ul class="pl o">' + lis(c.team) + '</ul></dd></div>' : '') + '</dl>';
+  /* 담당 정보: 노션의 속성 목록처럼 항목명과 값만 나란히 */
+  function prop(k, v) { return '<div class="pr"><dt>' + k + '</dt><dd>' + v + '</dd></div>'; }
+  function vals(a) { return a.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join(''); }
+  var meta = '<dl class="props">' + prop('역할', vals(c.roles || [])) + (ex.share ? prop('기여도', '<span>' + esc(ex.share) + '</span>') : '') +
+    prop('도구', vals(c.tools || [])) + prop('기간', '<span>' + esc(c.period) + '</span>') +
+    (c.domains && c.domains.length ? prop('경험한 기능', vals(c.domains)) : '') + (c.team && c.team.length ? prop('팀 구성', vals(c.team)) : '') + '</dl>';
 
   var hero = ex.img ? '<div class="hero"><img src="' + esc(ex.img) + '" alt="' + esc(c.title) + ' 대표 화면" /></div>' : '';
 
